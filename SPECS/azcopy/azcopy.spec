@@ -48,10 +48,11 @@ tar --no-same-owner -xf %{SOURCE1}
 
 %build
 export GOPATH=%{our_gopath}
-go build -buildmode=pie -mod=vendor
+go build -buildmode=pie -mod=vendor -ldflags="-buildid=$(date +%s)"
 
 %install
 install -D -m 0755 ./azure-storage-azcopy %{buildroot}%{_bindir}/azcopy
+install -D -m 0644 NOTICE.txt %{buildroot}%{_docdir}/%{name}/NOTICE.txt
 
 %check
 go test -mod=vendor

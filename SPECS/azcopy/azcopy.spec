@@ -52,7 +52,6 @@ go build -buildmode=pie -mod=vendor -ldflags="-buildid=$(date +%s)"
 
 %install
 install -D -m 0755 ./azure-storage-azcopy %{buildroot}%{_bindir}/azcopy
-install -D -m 0644 NOTICE.txt %{buildroot}%{_docdir}/%{name}/NOTICE.txt
 
 %check
 go test -mod=vendor
@@ -61,7 +60,7 @@ go test -mod=vendor
 %files
 %defattr(-,root,root)
 %license LICENSE
-%doc NOTICE.txt README.md
+%doc README.md
 %{_bindir}/azcopy
 
 %changelog

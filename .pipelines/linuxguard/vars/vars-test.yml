@@ -1,0 +1,8 @@
+# Variables for test build target
+
+variables:
+  STEAMBOAT_RESOURCE_GROUP: 'LinuxGuardPipelinesPRTest'
+  STEAMBOAT_STORAGE_ACCOUNT: 'linuxguardprimages'
+  STEAMBOAT_GALLERY_NAME: 'linuxguardprgallery'
+  STEAMBOAT_TCB_PUBLISH_LOCATION: 'eastus2'
+  STEAMBOAT_GALLERY_RESOURCE_GROUP: 'LinuxGuardPipelinesPRTest'

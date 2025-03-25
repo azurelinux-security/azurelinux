@@ -1,0 +1,8 @@
+# Variables for production build target
+
+variables:
+  STEAMBOAT_RESOURCE_GROUP: 'LinuxGuardPipelines'
+  STEAMBOAT_GALLERY_RESOURCE_GROUP: 'LinuxGuardPipelines'
+  STEAMBOAT_STORAGE_ACCOUNT: 'linuxguardimages'
+  STEAMBOAT_GALLERY_NAME: 'linuxguardgallery'
+  STEAMBOAT_TCB_PUBLISH_LOCATION: 'centralus'

@@ -1,0 +1,112 @@
+#################################################################################
+#                               OneBranch Pipelines                             #
+# This pipeline was created by EasyStart from a sample located at:              #
+#   https://aka.ms/obpipelines/easystart/samples                                #
+# Documentation:  https://aka.ms/obpipelines                                    #
+# Yaml Schema:    https://aka.ms/obpipelines/yaml/schema                        #
+# Retail Tasks:   https://aka.ms/obpipelines/tasks                              #
+# Support:        https://aka.ms/onebranchsup                                   #
+#################################################################################
+parameters:
+- name: isOfficialPipeline
+  type: boolean
+  default: false
+- name: buildTargets # This list matches the variants we have templated in the .pipelines/vars/ directory. Additionally, buildTargets must follow the same naming conventions as stage id naming, this is because it is reused for uniquely identifying each buildTarget's stage. Valid names may only contain alphanumeric characters and '_'.
+  type: object
+  default:
+    - 'azl3'
+    - 'uki'
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: OneBranch.Pipelines/GovernedTemplates
+      ref: refs/heads/main
+  pipelines:
+  - pipeline: TCB-Daily-Build
+    source: 'TCB-Daily-Build'
+
+extends:
+  # https://aka.ms/obpipelines/templates
+  ${{ if eq(parameters.isOfficialPipeline, true) }}:
+    template: v2/OneBranch.Official.CrossPlat.yml@templates
+  ${{ else }}:
+    template: v2/OneBranch.NonOfficial.CrossPlat.yml@templates
+  parameters:
+    globalSdl: # https://aka.ms/obpipelines/sdl
+      tsa:
+        # SDL results of non-official builds aren't uploaded to TSA by default.
+        enabled: false
+      policheck:
+        # always break the build on policheck issues. You can disable it by setting to 'false'
+        break: true
+      suppression:
+        suppressionFile: $(Build.SourcesDirectory)\.gdn\global.gdnsuppress
+
+    stages:
+    - ${{ each target in parameters.buildTargets }}:
+      - stage: publish_${{ target }} # Note: 'target' must be passed into the 'build-and-validate' template as variable 'buildTarget'. The stage name, 'build_${{ target }}', is used by the 'build-and-validate' template for artifact publishing and downloading
+        displayName: 'Publish ${{ target }} TCB'
+        variables:
+          - template: .pipelines/vars/vars-common.yml@self # values shared amongst all build targets. Primarily for Azure infrastructure (SIGs, Managed Identities, Subscriptions, etc...) that backs the build/publish process
+          - template: .pipelines/vars/vars-prod.yml@self
+          - template: .pipelines/vars/vars-${{ target }}.yml@self # This is where we import buildTarget specific values. Variables defined in this file will be accessible to all jobs within the stage below
+          - name: BUILD_TARGET
+            value: ${{ target }}
+          - name: ARTIFACT_DOWNLOAD_DIR
+            value: $(Pipeline.Workspace)/TCB-Daily-Build/drop_build_${{ target }}_images_amd64
+          - name: IMAGE_ARTIFACT_NAME
+            value: drop_build_${{ target }}_images_amd64
+          - name: PACKAGES_ARTIFACT_DOWNLOAD_DIR
+            value: $(Pipeline.Workspace)/TCB-Daily-Build/drop_build_${{ target }}_packages_amd64
+          - name: PACKAGES_ARTIFACT_NAME
+            value: drop_build_${{ target }}_packages_amd64
+        jobs:
+          - job: publish_${{ target }}
+            displayName: '${{ target }} TCB Image Publishing'
+            pool:
+              type: linux
+              name: TCB-Ubuntu-build-agent
+              os: linux
+              hostArchitecture: amd64
+              runOnHost: true
+              LinuxHostVersion:
+                architecture: amd64
+            variables: # More settings at https://aka.ms/obpipelines/yaml/jobs
+              - name: ob_git_checkout
+                value: true
+              # this directory is uploaded to pipeline artifacts, reddog and cloudvault.
+              # More info at https://aka.ms/obpipelines/artifacts
+              - name: ob_outputDirectory
+                value: '$(Build.SourcesDirectory)/out'
+            steps:
+              - bash: |
+                  set -euo pipefail
+                  echo "${SYSTEM_ACCESSTOKEN}" | az devops login
+                  mkdir -p $(ob_outputDirectory)
+                env:
+                  SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+                displayName: 'DevOps login'
+
+              - download: TCB-Daily-Build
+                artifact: $(IMAGE_ARTIFACT_NAME)
+                patterns: |
+                  image/secure-base/secure-base.qcow2
+                  update/secure-base/secure-base-update.qcow2
+                  image/secure-prod/secure-prod.vhd
+                  update/secure-prod/*.cosi
+                displayName: 'Download image artifact'
+
+              - download: TCB-Daily-Build
+                artifact: $(PACKAGES_ARTIFACT_NAME)
+                patterns: |
+                  tools/*
+                displayName: 'Download tools artifact'
+
+              - bash: |
+                  set -euo pipefail
+                  $(Build.SourcesDirectory)/scripts/publish-image.sh -o /tmp/mariner -a "$(ob_outputDirectory)"
+                displayName: 'Publish image'
+                env:
+                  IMAGE_BUILD_BRANCH: $(resources.pipeline.TCB-Daily-Build.sourceBranch)

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  containers:
+    - name: nginx
+      image: "mcr.microsoft.com/azurelinux/base/nginx:1.25.4-2-azl3.0.20241203"
+      imagePullPolicy: Always
+  runtimeClassName: runc

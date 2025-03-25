@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: busybox
+  name: busybox-runc2
+spec:
+  containers:
+    - name: busybox
+      image: "mcr.microsoft.com/azurelinux/busybox:1.36"
+      imagePullPolicy: Always
+      command: ["sleep", "3600"]
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+  runtimeClassName: runc

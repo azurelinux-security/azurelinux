@@ -1,0 +1,72 @@
+#################################################################################
+#                               OneBranch Pipelines                             #
+# This pipeline was created by EasyStart from a sample located at:              #
+#   https://aka.ms/obpipelines/easystart/samples                                #
+# Documentation:  https://aka.ms/obpipelines                                    #
+# Yaml Schema:    https://aka.ms/obpipelines/yaml/schema                        #
+# Retail Tasks:   https://aka.ms/obpipelines/tasks                              #
+# Support:        https://aka.ms/onebranchsup                                   #
+#################################################################################
+parameters:
+- name: isOfficialPipeline
+  type: boolean
+  default: false
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: OneBranch.Pipelines/GovernedTemplates
+      ref: refs/heads/main
+
+extends:
+  # https://aka.ms/obpipelines/templates
+  ${{ if eq(parameters.isOfficialPipeline, true) }}:
+    template: v2/OneBranch.Official.CrossPlat.yml@templates
+  ${{ else }}:
+    template: v2/OneBranch.NonOfficial.CrossPlat.yml@templates
+  parameters:
+    globalSdl: # https://aka.ms/obpipelines/sdl
+      tsa:
+        # SDL results of non-official builds aren't uploaded to TSA by default.
+        enabled: false
+      policheck:
+        # always break the build on policheck issues. You can disable it by setting to 'false'
+        break: true
+      suppression:
+        suppressionFile: $(Build.SourcesDirectory)\.gdn\global.gdnsuppress
+
+    stages:
+      - stage: publish_kernel_rpm
+        displayName: 'Publish kernel RPM'
+        jobs:
+          - job: publish_kernel
+            displayName: 'Kernel RPM Publishing'
+            pool:
+              type: linux
+              name: TCB-Ubuntu-build-agent
+              os: linux
+              hostArchitecture: amd64
+              runOnHost: true
+              LinuxHostVersion:
+                architecture: amd64
+            variables: # More settings at https://aka.ms/obpipelines/yaml/jobs
+              - name: ob_git_checkout
+                value: true
+              # this directory is uploaded to pipeline artifacts, reddog and cloudvault.
+              # More info at https://aka.ms/obpipelines/artifacts
+              - name: ob_outputDirectory
+                value: '$(Build.SourcesDirectory)/out'
+            steps:
+              - bash: |
+                  set -euo pipefail
+                  echo "${SYSTEM_ACCESSTOKEN}" | az devops login
+                  mkdir -p $(ob_outputDirectory)
+                env:
+                  SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+                displayName: 'DevOps login'
+
+              - bash: |
+                  set -euo pipefail
+                  $(Build.SourcesDirectory)/scripts/build-ipe-kernel.sh -o /tmp/mariner -a "$(ob_outputDirectory)"
+                displayName: 'Build kernel package'

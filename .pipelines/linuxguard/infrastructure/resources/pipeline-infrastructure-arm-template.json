@@ -1,0 +1,332 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.jso",
+    "contentVersion": "1.0.0.0",
+    "parameters": { 
+        "storage_account_name": {
+            "type": "string",
+            "defaultValue": "linuxguardimages",
+            "metadata": {
+                "description": "Name of the Storage Account that stores all of the Trusted Compute Base VHD blob files"
+            }
+        },
+        "gallery_name": {
+            "type": "string",
+            "defaultValue": "linuxguardgallery",
+            "metadata": {
+                "description": "Name of the Azure Compute Gallery that will contain all image definitions and image versions for the Trusted Compute Base pipelines"
+            }
+        },
+        "image_name": {
+            "type": "string",
+            "defaultValue": "TCB-Ubuntu-build-agent",
+            "metadata": {
+                "description": "Name of the 1ES Image and 1ES Hosted Pool"
+            }
+        },
+        "managed_identity_name": {
+            "type": "string",
+            "defaultValue": "linuxguard-managed-identity",
+            "metadata": {
+                "description": "Name of the Managed Identity that acts on behalf of the pipeline agent"
+            }
+        },
+        "location": { 
+            "type": "string",
+            "defaultValue": "westus3",
+            "metadata": {
+                "description": "Name of the location"
+            }
+        },
+        "agentpool_sku": {
+            "type": "string",
+            "defaultValue": "Standard_D2ads_v5",
+            "metadata": {
+                "description": "Sku of the VMs"
+            }
+        },
+        "max_build_agents": {
+            "type": "int",
+            "defaultValue": 40,
+            "metadata": {
+                "description": "Maximum number of build agents"
+            }
+        },
+        "min_build_agents": {
+            "type": "int",
+            "defaultValue": 0,
+            "metadata": {
+                "description": "Minimum number of pre-provisioned build agents"
+            }
+        },
+        "ado_organization": {
+            "type": "string",
+            "defaultValue": "mariner-org",
+            "metadata": {
+                "description": "Azure DevOps organization"
+            }
+        },
+        "reader_guid": {
+            "type": "string",
+            "defaultValue": "[newGuid()]",
+            "metadata": {
+                "description": "A new GUID used to identify the role assignment"
+            }
+        },
+        "storage_blob_data_contributor_guid": {
+            "type": "string",
+            "defaultValue": "[newGuid()]",
+            "metadata": {
+                "description": "A new GUID used to identify the role assignment"
+            }
+        },
+        "storage_account_contributor_guid": {
+            "type": "string",
+            "defaultValue": "[newGuid()]",
+            "metadata": {
+                "description": "A new GUID used to identify the role assignment"
+            }
+        },
+        "gallery_artifacts_publisher_guid": {
+            "type": "string",
+            "defaultValue": "[newGuid()]",
+            "metadata": {
+                "description": "A new GUID used to identify the role assignment"
+            }
+        }
+    },
+    "variables": {
+        "image_name": "[concat(parameters('image_name'), '-image')]",
+        "ado_org_url": "[concat('https://dev.azure.com/', parameters('ado_organization'))]",
+        "Reader": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/','c12c1c16-33a1-487b-954d-41c89c60f349')]",
+        "Storage_Account_Contributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/','17d1049b-9a84-46fb-8f53-869881c3d3ab')]",
+        "Storage_Blob_Data_Contributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/','ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
+        "Gallery_Artifacts_Publisher": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/','85a2d0d9-2eba-4c9c-b355-11c2cc0788ab')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/galleries",
+            "apiVersion": "2023-07-03",
+            "name": "[parameters('gallery_name')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "identifier": {}
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2023-05-01",
+            "name": "[parameters('storage_account_name')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "Standard_RAGRS",
+                "tier": "Standard"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "allowCrossTenantReplication": false,
+                "minimumTlsVersion": "TLS1_0",
+                "allowBlobPublicAccess": true,
+                "allowSharedKeyAccess": false,
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                },
+                "accessTier": "Hot"
+            }
+        },
+        {
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "apiVersion": "2023-07-31-preview",
+            "name": "[parameters('managed_identity_name')]",
+            "location": "[parameters('location')]"
+        },
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2022-04-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managed_identity_name'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storage_account_name'))]"
+            ],
+            "name": "[parameters('storage_account_contributor_guid')]",
+            "scope": "[concat('Microsoft.Storage/storageAccounts', '/', parameters('storage_account_name'))]",
+            "properties": {
+              "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managed_identity_name')), '2023-07-31-preview').principalId]",
+              "principalType": "ServicePrincipal",
+              "roleDefinitionId": "[variables('Storage_Account_Contributor')]"
+            }
+        },
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2022-04-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managed_identity_name'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storage_account_name'))]"
+            ],
+            "name": "[parameters('storage_blob_data_contributor_guid')]",
+            "scope": "[concat('Microsoft.Storage/storageAccounts', '/', parameters('storage_account_name'))]",
+            "properties": {
+              "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managed_identity_name')), '2023-07-31-preview').principalId]",
+              "principalType": "ServicePrincipal",
+              "roleDefinitionId": "[variables('Storage_Blob_Data_Contributor')]"
+            }
+        },
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2022-04-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managed_identity_name'))]"
+            ],
+            "name": "[parameters('reader_guid')]",
+            "scope": "[subscription().id]",
+            "properties": {
+              "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managed_identity_name')), '2023-07-31-preview').principalId]",
+              "principalType": "ServicePrincipal",
+              "roleDefinitionId": "[variables('Reader')]"
+            }
+        },
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2022-04-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managed_identity_name'))]",
+                "[resourceId('Microsoft.Compute/galleries', parameters('gallery_name'))]"
+            ],
+            "name": "[parameters('gallery_artifacts_publisher_guid')]",
+            "scope": "[concat('Microsoft.Compute/galleries', '/', parameters('gallery_name'))]",
+            "properties": {
+              "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managed_identity_name')), '2023-07-31-preview').principalId]",
+              "principalType": "ServicePrincipal",
+              "roleDefinitionId": "[variables('Gallery_Artifacts_Publisher')]"
+            }
+        },
+        {
+            "type": "Microsoft.CloudTest/images",
+            "name": "[variables('image_name')]",
+            "location": "[parameters('location')]",
+            "apiVersion": "2020-05-07",
+            "properties": {
+                "imageType": "Managed",
+                "baseImage": "/subscriptions/c69d8db0-c48c-45ac-bba0-d35dbbf96866/resourceGroups/CloudTestImages/providers/Microsoft.Compute/galleries/CloudTestGallery/images/MMSUbuntu22.04-1ESPT/versions/latest",
+                "artifacts": [
+                    {
+                        "name": "linux-apt-get-remove",
+                        "parameters": {
+                            "packages": "gsl-bin libgsl-dev libgsl27 libgslcblas0"
+                        },
+                        "stabilizationPause": "00:00:03"
+                    },
+                    {
+                        "name": "linux-update-and-upgrade-packages",
+                        "stabilizationPause": "00:00:03"
+                    },
+                    {
+                        "name": "linux-install-packages",
+                        "parameters": {
+                            "packages": "acl bc bridge-utils clang libcairo2-dev libgirepository1.0-dev libvirt-daemon-system libvirt-dev libvirt-clients ncat openssh-client openssl ovmf protobuf-compiler python3-bcrypt python3-dev python3-docker python3-jinja2 python3-libvirt python3-netifaces python3-venv qemu qemu-efi qemu-kvm qemu-utils swtpm swtpm-tools virt-manager zstd"
+                        },
+                        "stabilizationPause": "00:00:03"
+                    },
+                    {
+                        "name": "linux-bash-command",
+                        "parameters": {
+                            "command": "sudo chmod -R 777 /opt/hostedtoolcache"
+                        }
+                    }
+                ],
+                "contacts": [
+                    "sdougherty@microsoft.com",
+                    "snambakam@microsoft.com",
+                    "hebeberm@microsoft.com",
+                    "dadelan@microsoft.com",
+                    "lyrydber@microsoft.com"
+                ],
+                "publishingProfile": {
+                    "targetRegions": [
+                        {
+                            "name": "[parameters('location')]",
+                            "replicas": 1
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.CloudTest/hostedpools",
+            "apiVersion": "2020-05-07",
+            "name": "[parameters('image_name')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CloudTest/images', variables('image_name'))]",
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managed_identity_name'))]"
+            ],
+            "properties": {
+                "organizationProfile": {
+                "organizations": [
+                    {
+                        "url": "[variables('ado_org_url')]",
+                        "projects": [],
+                        "parallelism": "[parameters('max_build_agents')]"
+                    }
+                ],
+                "visibility": true,
+                "type": "AzureDevOps",
+                "url": "[variables('ado_org_url')]"
+                },
+                "organization": "[variables('ado_org_url')]",
+                "sku": {
+                    "tier": "Standard",
+                    "name": "[parameters('agentpool_sku')]",
+                    "type": "AzureSku"
+                },
+                "images": [
+                    {
+                        "imageName": "[variables('image_name')]",
+                        "poolBufferPercentage": "*"
+                    }
+                ],
+                "maxPoolSize": "[parameters('max_build_agents')]",
+                "agentProfile": {
+                    "type": "Stateless",
+                    "resourcePredictions": [
+                        {
+                            "00:00:00": "[parameters('min_build_agents')]"
+                        }
+                    ]
+                },
+                "contacts": [
+                    "sdougherty@microsoft.com",
+                    "snambakam@microsoft.com",
+                    "hebeberm@microsoft.com",
+                    "dadelan@microsoft.com",
+                    "lyrydber@microsoft.com"
+                ],
+                "vmProvider": "Azure",
+                "vmProviderProperties": {
+                    "EnableAcceleratedNetworking": true,
+                    "EnableEncryption": true,
+                    "RequestPmeSubscription": true,
+                    "SubscriptionId": "298c0fac-b6cc-4a3f-80ce-a10fc40bcf62",
+                    "SubscriptionType": "Azure",
+                    "TenantId": "975f013f-7f24-47e8-a7d3-abc4752bf346"
+                }
+            },
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managed_identity_name'))]": {
+                    }
+                }
+            }
+        }
+    ]
+}

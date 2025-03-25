@@ -1,0 +1,5 @@
+# Shared Variables for all build targets
+
+variables:
+  STEAMBOAT_SUBSCRIPTION: '035db282-f1c8-4ce7-b78f-2a7265d5398c'
+  AZCOPY_AUTO_LOGIN_TYPE: 'MSI'

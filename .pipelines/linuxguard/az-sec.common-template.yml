@@ -21,7 +21,7 @@ parameters:
   default: 767965
 
 - name: repoSource
-  type: number
+  type: string
   default: 'azlTemplates'
 
 resources:

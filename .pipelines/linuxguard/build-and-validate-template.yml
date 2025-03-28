@@ -4,42 +4,42 @@ parameters:
   default: 767965
 
 jobs:
-- job: packages_amd64
-  displayName: 'Build Packages'
-  pool:
-    type: linux
-    name: TCB-Ubuntu-build-agent
-    os: linux
-    hostArchitecture: amd64
-    runOnHost: true
-    LinuxHostVersion:
-      architecture: amd64
-  variables: # More settings at https://aka.ms/obpipelines/yaml/jobs
-    - name: ob_git_checkout
-      value: true
-    # this directory is uploaded to pipeline artifacts, reddog and cloudvault.
-    # More info at https://aka.ms/obpipelines/artifacts
-    - name: ob_outputDirectory
-      value: '$(Build.SourcesDirectory)/out'
-  steps:
-    - task: PipAuthenticate@1
-      displayName: Provision - Authenticate Pip
-      inputs:
-        onlyAddExtraIndex: false
-        artifactFeeds: 'mariner/Mariner-Pypi-Feed'
+# - job: packages_amd64
+#   displayName: 'Build Packages'
+#   pool:
+#     type: linux
+#     name: TCB-Ubuntu-build-agent
+#     os: linux
+#     hostArchitecture: amd64
+#     runOnHost: true
+#     LinuxHostVersion:
+#       architecture: amd64
+#   variables: # More settings at https://aka.ms/obpipelines/yaml/jobs
+#     - name: ob_git_checkout
+#       value: true
+#     # this directory is uploaded to pipeline artifacts, reddog and cloudvault.
+#     # More info at https://aka.ms/obpipelines/artifacts
+#     - name: ob_outputDirectory
+#       value: '$(Build.SourcesDirectory)/out'
+#   steps:
+#     - task: PipAuthenticate@1
+#       displayName: Provision - Authenticate Pip
+#       inputs:
+#         onlyAddExtraIndex: false
+#         artifactFeeds: 'mariner/Mariner-Pypi-Feed'
 
-    - bash: |
-        set -euo pipefail
-        echo "${SYSTEM_ACCESSTOKEN}" | az devops login
-        mkdir -p $(ob_outputDirectory)
-      env:
-        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-      displayName: 'DevOps login'
+#     - bash: |
+#         set -euo pipefail
+#         echo "${SYSTEM_ACCESSTOKEN}" | az devops login
+#         mkdir -p $(ob_outputDirectory)
+#       env:
+#         SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+#       displayName: 'DevOps login'
 
-    - bash: |
-        set -euo pipefail
-        $(Build.SourcesDirectory)/scripts/build.sh -o /tmp/mariner -a "$(ob_outputDirectory)"
-      displayName: 'Build package'
+#     - bash: |
+#         set -euo pipefail
+#         $(Build.SourcesDirectory)/scripts/build.sh -o /tmp/mariner -a "$(ob_outputDirectory)"
+#       displayName: 'Build package'
 
 - job: images_amd64
   displayName: 'Build Images'
@@ -80,51 +80,51 @@ jobs:
         $(Build.SourcesDirectory)/scripts/install-packages-prereqs.sh
       displayName: 'Install prerequisites'
 
-    - task: DownloadPipelineArtifact@2
-      displayName: "Download packages"
-      inputs:
-        buildType: current
-        artifactName: "drop_build_$(BUILD_TARGET)_packages_amd64"
-        patterns: "packages/rpms.tar.gz"
-        targetPath: "/tmp/mariner/$(BUILD_TARGET)"
+    # - task: DownloadPipelineArtifact@2
+    #   displayName: "Download packages"
+    #   inputs:
+    #     buildType: current
+    #     artifactName: "drop_build_$(BUILD_TARGET)_packages_amd64"
+    #     patterns: "packages/rpms.tar.gz"
+    #     targetPath: "/tmp/mariner/$(BUILD_TARGET)"
 
-    - bash: |
-        set -euo pipefail
+    # - bash: |
+    #     set -euo pipefail
 
-        RPMS_DIR=/tmp/mariner/${BUILD_TARGET}/out/RPMS
-        mkdir -p $RPMS_DIR
-        tar -xvf /tmp/mariner/${BUILD_TARGET}/packages/rpms.tar.gz -C $RPMS_DIR
-        find $RPMS_DIR -type f -name "*.rpm" -exec mv {} $RPMS_DIR \;
-        ls $RPMS_DIR
-      displayName: 'Extract packages'
+    #     RPMS_DIR=/tmp/mariner/${BUILD_TARGET}/out/RPMS
+    #     mkdir -p $RPMS_DIR
+    #     tar -xvf /tmp/mariner/${BUILD_TARGET}/packages/rpms.tar.gz -C $RPMS_DIR
+    #     find $RPMS_DIR -type f -name "*.rpm" -exec mv {} $RPMS_DIR \;
+    #     ls $RPMS_DIR
+    #   displayName: 'Extract packages'
 
-    - task: DownloadPipelineArtifact@2
-      displayName: "Download kernel"
-      inputs:
-        buildType: specific
-        buildVersionToDownload: specific
-        project: 'mariner'
-        buildId: ${{parameters.kernelBuildId}}
-        definition: 4001 # IPE Kernel Build pipeline
-        artifactName: "drop_publish_kernel_rpm_publish_kernel"
-        patterns: "packages/rpms.tar.gz"
-        targetPath: "/tmp/mariner/$(BUILD_TARGET)/kernel"
+    # - task: DownloadPipelineArtifact@2
+    #   displayName: "Download kernel"
+    #   inputs:
+    #     buildType: specific
+    #     buildVersionToDownload: specific
+    #     project: 'mariner'
+    #     buildId: ${{parameters.kernelBuildId}}
+    #     definition: 4001 # IPE Kernel Build pipeline
+    #     artifactName: "drop_publish_kernel_rpm_publish_kernel"
+    #     patterns: "packages/rpms.tar.gz"
+    #     targetPath: "/tmp/mariner/$(BUILD_TARGET)/kernel"
 
-    - task: DownloadSecureFile@1
-      name: ipekey
-      displayName: 'Download IPE signing key'
-      inputs:
-        secureFile: 'ipe-signing-key.pem'
+    # - task: DownloadSecureFile@1
+    #   name: ipekey
+    #   displayName: 'Download IPE signing key'
+    #   inputs:
+    #     secureFile: 'ipe-signing-key.pem'
 
-    - bash: |
-        set -euo pipefail
+    # - bash: |
+    #     set -euo pipefail
 
-        RPMS_DIR=/tmp/mariner/${BUILD_TARGET}/out/RPMS/kernel
-        mkdir -p $RPMS_DIR
-        tar -xvf /tmp/mariner/$(BUILD_TARGET)/kernel/packages/rpms.tar.gz -C $RPMS_DIR
-        find $RPMS_DIR -type f -name "*.rpm" -exec mv {} $RPMS_DIR \;
-        ls $RPMS_DIR
-      displayName: 'Extract kernel packages'
+    #     RPMS_DIR=/tmp/mariner/${BUILD_TARGET}/out/RPMS/kernel
+    #     mkdir -p $RPMS_DIR
+    #     tar -xvf /tmp/mariner/$(BUILD_TARGET)/kernel/packages/rpms.tar.gz -C $RPMS_DIR
+    #     find $RPMS_DIR -type f -name "*.rpm" -exec mv {} $RPMS_DIR \;
+    #     ls $RPMS_DIR
+    #   displayName: 'Extract kernel packages'
 
     - bash: |
         set -euo pipefail
@@ -140,8 +140,8 @@ jobs:
         set -euo pipefail
         $(Build.SourcesDirectory)/scripts/build-images.sh -o /tmp/mariner -a "$(ob_outputDirectory)" -k "$(ipekey.secureFilePath)"
       displayName: 'Build images'
-      env:
-        IPE_SIGNING_KEY_PASSWORD: "$(ipe_signing_key_password)"
+      # env:
+      #   IPE_SIGNING_KEY_PASSWORD: "$(ipe_signing_key_password)"
 
 - template: validate-template.yml@azlTemplates
   parameters:

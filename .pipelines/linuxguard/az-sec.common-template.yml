@@ -59,6 +59,6 @@ extends:
           - name: BUILD_TARGET
             value: ${{ target }}
         jobs:
-          - template: .pipelines/build-and-validate-template.yml@azlTemplates
+          - template: .pipelines/linuxguard/build-and-validate-template.yml@azlTemplates
             parameters:
               kernelBuildId: ${{ parameters.kernelBuildId }}

@@ -76,8 +76,12 @@ jobs:
       displayName: 'DevOps login'
 
     - bash: |
+      ls $(Build.SourcesDirectory)/.pipelines@azlTemplates
+      displayName: 'List files in azlTemplates'
+
+    - bash: |
         set -euo pipefail
-        ls $(Build.SourcesDirectory)
+        ls .pipelines@azlTemplates
         $(Build.SourcesDirectory)/scripts/install-packages-prereqs.sh
       displayName: 'Install prerequisites'
 

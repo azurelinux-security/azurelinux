@@ -31,34 +31,34 @@ parameters:
 #       name: OneBranch.Pipelines/GovernedTemplates
 #       ref: refs/heads/main
 
-extends:
-  # https://aka.ms/obpipelines/templates
-  ${{ if eq(parameters.isOfficialPipeline, true) }}:
-    template: v2/OneBranch.Official.CrossPlat.yml@templates
-  ${{ else }}:
-    template: v2/OneBranch.NonOfficial.CrossPlat.yml@templates
-  parameters:
-    globalSdl: # https://aka.ms/obpipelines/sdl
-      tsa:
-        # SDL results of non-official builds aren't uploaded to TSA by default.
-        enabled: false
-      policheck:
-        # always break the build on policheck issues. You can disable it by setting to 'false'
-        break: true
-      suppression:
-        suppressionFile: $(Build.SourcesDirectory)\.gdn\global.gdnsuppress
+# extends:
+#   # https://aka.ms/obpipelines/templates
+#   ${{ if eq(parameters.isOfficialPipeline, true) }}:
+#     template: v2/OneBranch.Official.CrossPlat.yml@templates
+#   ${{ else }}:
+#     template: v2/OneBranch.NonOfficial.CrossPlat.yml@templates
+#   parameters:
+#     globalSdl: # https://aka.ms/obpipelines/sdl
+#       tsa:
+#         # SDL results of non-official builds aren't uploaded to TSA by default.
+#         enabled: false
+#       policheck:
+#         # always break the build on policheck issues. You can disable it by setting to 'false'
+#         break: true
+#       suppression:
+#         suppressionFile: $(Build.SourcesDirectory)\.gdn\global.gdnsuppress
 
-    stages:
-    - ${{ each target in parameters.buildTargets }}:
-      - stage: build_${{ target }} # Note: 'target' must be passed into the 'build-and-validate' template as variable 'buildTarget'. The stage name, 'build_${{ target }}', is used by the 'build-and-validate' template for artifact publishing and downloading
-        displayName: 'Build and Validate ${{ target }}'
-        variables:
-          - template: .pipelines/linuxguard/vars/vars-common.yml@azlTemplates # values shared amongst all build targets. Primarily for Azure infrastructure (SIGs, Managed Identities, Subscriptions, etc...) that backs the build/publish process
-          - template: .pipelines/linuxguard/vars/vars-test.yml@azlTemplates
-          - template: .pipelines/linuxguard/vars/vars-${{ target }}.yml@azlTemplates # This is where we import buildTarget specific values. Variables defined in this file will be accessible to all jobs within the stage below
-          - name: BUILD_TARGET
-            value: ${{ target }}
-        jobs:
-          - template: .pipelines/linuxguard/build-and-validate-template.yml@azlTemplates
-            parameters:
-              kernelBuildId: ${{ parameters.kernelBuildId }}
+stages:
+- ${{ each target in parameters.buildTargets }}:
+  - stage: build_${{ target }} # Note: 'target' must be passed into the 'build-and-validate' template as variable 'buildTarget'. The stage name, 'build_${{ target }}', is used by the 'build-and-validate' template for artifact publishing and downloading
+    displayName: 'Build and Validate ${{ target }}'
+    variables:
+      - template: .pipelines/linuxguard/vars/vars-common.yml@azlTemplates # values shared amongst all build targets. Primarily for Azure infrastructure (SIGs, Managed Identities, Subscriptions, etc...) that backs the build/publish process
+      - template: .pipelines/linuxguard/vars/vars-test.yml@azlTemplates
+      - template: .pipelines/linuxguard/vars/vars-${{ target }}.yml@azlTemplates # This is where we import buildTarget specific values. Variables defined in this file will be accessible to all jobs within the stage below
+      - name: BUILD_TARGET
+        value: ${{ target }}
+    jobs:
+      - template: .pipelines/linuxguard/build-and-validate-template.yml@azlTemplates
+        parameters:
+          kernelBuildId: ${{ parameters.kernelBuildId }}

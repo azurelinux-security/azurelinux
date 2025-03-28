@@ -59,7 +59,7 @@ jobs:
     # More info at https://aka.ms/obpipelines/artifacts
     - name: ob_outputDirectory
       value: '$(Build.SourcesDirectory)/out'
-    - group: ipe_signing # brings ipe_signing_key_password
+    # - group: ipe_signing # brings ipe_signing_key_password
   steps:
     - task: PipAuthenticate@1
       displayName: Provision - Authenticate Pip

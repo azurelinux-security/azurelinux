@@ -14,7 +14,7 @@ parameters:
 - name: buildTargets # This list matches the variants we have templated in the .pipelines/vars/ directory. Additionally, buildTargets must follow the same naming conventions as stage id naming, this is because it is reused for uniquely identifying each buildTarget's stage. Valid names may only contain alphanumeric characters and '_'.
   type: object
   default:
-    - 'uki'
+    # - 'uki'
     - 'azl3'
 - name: kernelBuildId
   type: number

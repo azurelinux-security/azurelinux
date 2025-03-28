@@ -43,7 +43,7 @@ jobs:
 
 - job: images_amd64
   displayName: 'Build Images'
-  dependsOn: packages_amd64
+  # dependsOn: packages_amd64
   timeoutInMinutes: 30
   pool:
     type: linux

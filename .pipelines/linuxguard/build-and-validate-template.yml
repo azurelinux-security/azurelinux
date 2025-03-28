@@ -143,10 +143,10 @@ jobs:
       env:
         IPE_SIGNING_KEY_PASSWORD: "$(ipe_signing_key_password)"
 
-- template: validate-template.yml@self
+- template: validate-template.yml@azlTemplates
   parameters:
     testPlatform: qemu
 
-- template: validate-template.yml@self
+- template: validate-template.yml@azlTemplates
   parameters:
     testPlatform: azure

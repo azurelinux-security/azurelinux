@@ -76,8 +76,7 @@ jobs:
       displayName: 'DevOps login'
 
     - bash: |
-        ls .pipelines@azlTemplates
-        # ls $(Build.SourcesDirectory)/.pipelines@azlTemplates
+        ls
       displayName: 'List files in azlTemplates'
 
     - bash: |

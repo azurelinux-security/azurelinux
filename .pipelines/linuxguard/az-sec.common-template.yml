@@ -53,9 +53,9 @@ extends:
       - stage: build_${{ target }} # Note: 'target' must be passed into the 'build-and-validate' template as variable 'buildTarget'. The stage name, 'build_${{ target }}', is used by the 'build-and-validate' template for artifact publishing and downloading
         displayName: 'Build and Validate ${{ target }}'
         variables:
-          - template: .pipelines/linuxguardvars/vars-common.yml@azlTemplates # values shared amongst all build targets. Primarily for Azure infrastructure (SIGs, Managed Identities, Subscriptions, etc...) that backs the build/publish process
-          - template: .pipelines/linuxguardvars/vars-test.yml@azlTemplates
-          - template: .pipelines/linuxguardvars/vars-${{ target }}.yml@azlTemplates # This is where we import buildTarget specific values. Variables defined in this file will be accessible to all jobs within the stage below
+          - template: .pipelines/linuxguard/vars/vars-common.yml@azlTemplates # values shared amongst all build targets. Primarily for Azure infrastructure (SIGs, Managed Identities, Subscriptions, etc...) that backs the build/publish process
+          - template: .pipelines/linuxguard/vars/vars-test.yml@azlTemplates
+          - template: .pipelines/linuxguard/vars/vars-${{ target }}.yml@azlTemplates # This is where we import buildTarget specific values. Variables defined in this file will be accessible to all jobs within the stage below
           - name: BUILD_TARGET
             value: ${{ target }}
         jobs:

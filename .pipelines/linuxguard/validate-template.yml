@@ -25,7 +25,7 @@ jobs:
     # More info at https://aka.ms/obpipelines/artifacts
     - name: ob_outputDirectory
       value: '$(Build.SourcesDirectory)/out'
-    - group: ipe_signing # brings ipe_signing_key_password
+    # - group: ipe_signing # brings ipe_signing_key_password
   steps:
     - task: PipAuthenticate@1
       displayName: Provision - Authenticate Pip
@@ -67,11 +67,11 @@ jobs:
         $(Build.SourcesDirectory)/scripts/install-validate-prereqs.sh
       displayName: 'Install prerequisites'
 
-    - task: DownloadSecureFile@1
-      name: ipekey
-      displayName: 'Download IPE signing key'
-      inputs:
-        secureFile: 'ipe-signing-key.pem'
+    # - task: DownloadSecureFile@1
+    #   name: ipekey
+    #   displayName: 'Download IPE signing key'
+    #   inputs:
+    #     secureFile: 'ipe-signing-key.pem'
 
     - task: DownloadPipelineArtifact@2
       displayName: "Download tools"
@@ -90,8 +90,8 @@ jobs:
     - bash: |
         set -euo pipefail
         TEST_PLATFORM=${{ parameters.testPlatform }} $(Build.SourcesDirectory)/scripts/build-test-images.sh -o /tmp/mariner -a "$(ob_outputDirectory)" -k "$(ipekey.secureFilePath)"
-      env:
-        IPE_SIGNING_KEY_PASSWORD: "$(ipe_signing_key_password)"
+      # env:
+      #   IPE_SIGNING_KEY_PASSWORD: "$(ipe_signing_key_password)"
       displayName: 'Build images'
       timeoutInMinutes: 40
 
@@ -112,7 +112,7 @@ jobs:
         STEAMBOAT_TEST_RESOURCE_GROUP: linuxguard-validation-$(Build.BuildId)-$(BUILD_TARGET)
         TEST_PLATFORM: ${{ parameters.testPlatform }}
         IMAGE_DEFINITION: pipeline-test-$(BUILD_TARGET)-$(System.DefinitionId)
-        IPE_SIGNING_KEY_PASSWORD: "$(ipe_signing_key_password)"
+        # IPE_SIGNING_KEY_PASSWORD: "$(ipe_signing_key_password)"
         STEAMBOAT_ACR_NAME: steamboat$(Build.BuildId)$(BUILD_TARGET)
       displayName: 'Validate images'
       timeoutInMinutes: 40

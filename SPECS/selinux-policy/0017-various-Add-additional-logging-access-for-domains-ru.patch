@@ -1,7 +1,7 @@
-From f6c4470e528370d5b6e8cf25b86e753c98022592 Mon Sep 17 00:00:00 2001
+From 6a301ec787344e2ff85de6187ea6424db4c00ce6 Mon Sep 17 00:00:00 2001
 From: Chris PeBenito <chpebeni@linux.microsoft.com>
 Date: Mon, 25 Mar 2024 09:50:17 -0400
-Subject: [PATCH 17/33] various: Add additional logging access for domains run
+Subject: [PATCH 17/34] various: Add additional logging access for domains run
  from cloud_init.
 
 Signed-off-by: Chris PeBenito <chpebeni@linux.microsoft.com>
@@ -13,10 +13,10 @@ Signed-off-by: Chris PeBenito <chpebeni@linux.microsoft.com>
  4 files changed, 18 insertions(+), 1 deletion(-)
 
 diff --git a/policy/modules/admin/bootloader.te b/policy/modules/admin/bootloader.te
-index 84b243c0c..af162dd9b 100644
+index 02d4d07cf..654b92da5 100644
 --- a/policy/modules/admin/bootloader.te
 +++ b/policy/modules/admin/bootloader.te
-@@ -258,4 +258,6 @@ optional_policy(`
+@@ -264,4 +264,6 @@ optional_policy(`
  
  optional_policy(`
  	rpm_rw_pipes(bootloader_t)
@@ -37,10 +37,10 @@ index b20c3cd3d..19943a0ae 100644
  
  #####################################
 diff --git a/policy/modules/system/selinuxutil.te b/policy/modules/system/selinuxutil.te
-index 3eedf82c3..8e521e583 100644
+index 86a6e5503..befa8fd3c 100644
 --- a/policy/modules/system/selinuxutil.te
 +++ b/policy/modules/system/selinuxutil.te
-@@ -585,6 +585,11 @@ optional_policy(`
+@@ -612,6 +612,11 @@ optional_policy(`
  	locallogin_use_fds(semanage_t)
  ')
  
@@ -52,7 +52,7 @@ index 3eedf82c3..8e521e583 100644
  ########################################
  #
  # Setfiles local policy
-@@ -714,6 +719,11 @@ optional_policy(`
+@@ -741,6 +746,11 @@ optional_policy(`
  	container_getattr_fs(setfiles_t)
  ')
  
@@ -65,10 +65,10 @@ index 3eedf82c3..8e521e583 100644
          # leaked file descriptors
          udev_dontaudit_rw_dgram_sockets(setfiles_t)
 diff --git a/policy/modules/system/udev.te b/policy/modules/system/udev.te
-index bebefdda8..8af0d90e0 100644
+index c9b32c822..0e8722d5c 100644
 --- a/policy/modules/system/udev.te
 +++ b/policy/modules/system/udev.te
-@@ -436,3 +436,8 @@ seutil_read_file_contexts(udevadm_t)
+@@ -437,3 +437,8 @@ seutil_read_file_contexts(udevadm_t)
  storage_getattr_fixed_disk_dev(udevadm_t)
  
  userdom_use_user_terminals(udevadm_t)
@@ -78,5 +78,5 @@ index bebefdda8..8af0d90e0 100644
 +	rpm_append_inherited_tmp_files(udevadm_t)
 +')
 -- 
-2.45.2
+2.49.0
 

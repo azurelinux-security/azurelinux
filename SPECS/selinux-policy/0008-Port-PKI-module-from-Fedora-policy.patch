@@ -1,7 +1,7 @@
-From bde9b82b3d8fdb20d373208ba91650d7ee0ee039 Mon Sep 17 00:00:00 2001
+From 8045a2885bd4bfadcd402448d6490af3e1a9ca6b Mon Sep 17 00:00:00 2001
 From: Chris PeBenito <Christopher.PeBenito@microsoft.com>
 Date: Thu, 16 Feb 2023 15:25:40 +0000
-Subject: [PATCH 08/14] Port PKI module from Fedora policy.
+Subject: [PATCH 08/34] Port PKI module from Fedora policy.
 
 Signed-off-by: Chris PeBenito <Christopher.PeBenito@microsoft.com>
 ---
@@ -17,7 +17,7 @@ Signed-off-by: Chris PeBenito <Christopher.PeBenito@microsoft.com>
  create mode 100644 policy/modules/services/pki.te
 
 diff --git a/policy/modules/kernel/corenetwork.te.in b/policy/modules/kernel/corenetwork.te.in
-index 699ff7f7d..06e01544d 100644
+index 814a36273..ce0849d06 100644
 --- a/policy/modules/kernel/corenetwork.te.in
 +++ b/policy/modules/kernel/corenetwork.te.in
 @@ -228,6 +228,12 @@ network_port(pegasus_http, tcp,5988,s0)
@@ -34,7 +34,7 @@ index 699ff7f7d..06e01544d 100644
  network_port(pop, tcp,106,s0, tcp,109,s0, tcp,110,s0, tcp,143,s0, tcp,220,s0, tcp,993,s0, tcp,995,s0, tcp,1109,s0)
  network_port(portmap, udp,111,s0, tcp,111,s0)
 diff --git a/policy/modules/services/apache.if b/policy/modules/services/apache.if
-index 2b3a7f3c5..6600ffedb 100644
+index d272f286c..b5a0682cd 100644
 --- a/policy/modules/services/apache.if
 +++ b/policy/modules/services/apache.if
 @@ -254,6 +254,25 @@ interface(`apache_exec',`
@@ -941,5 +941,5 @@ index 59dd6e0d6..a772ac7b7 100644
  #
  # tomcat domain local policy
 -- 
-2.43.2
+2.49.0
 

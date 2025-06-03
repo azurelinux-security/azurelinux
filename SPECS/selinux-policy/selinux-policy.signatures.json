@@ -4,6 +4,6 @@
   "booleans_targeted.conf": "009f880c7179a007569dfdbf40ef64ae41671ad33cc2717eebbdaeb8ab431d12",
   "macros.selinux-policy": "027f5d27441a7262365c26076dc3b7ab1f1ac62026ae94514020e0607e53a73a",
   "modules_targeted.conf": "161f7075f935afb15402084e5dc6b67da9a6b578631f0f77459b0461176da9e2",
-  "refpolicy-2.20240226.tar.bz2": "7ed41f4f45189b9ee9706da8ac357eccc103651b56daabaddb54c436e8117cf9"
+  "refpolicy-2.20250213.tar.bz2": "d2487c49420e8710e999b18bbe699fbff033fe5adc5127e3f0c7dafaa9b4d209"
  }
 }

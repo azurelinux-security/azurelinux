@@ -1,7 +1,7 @@
-From d320ec78acdd34afb00b91c046933e150baa4daf Mon Sep 17 00:00:00 2001
+From 1cef0c7e692b5370928943d38a0556ca7c13a333 Mon Sep 17 00:00:00 2001
 From: Chris PeBenito <chpebeni@linux.microsoft.com>
 Date: Mon, 25 Mar 2024 09:44:25 -0400
-Subject: [PATCH 15/24] various: Add new pidfd uses.
+Subject: [PATCH 15/34] various: Add new pidfd uses.
 
 Systemd is using more pidfds.
 
@@ -46,7 +46,7 @@ index 7496b800a..6d427e771 100644
  ## <summary>
  ##	Read cloud-init process state.
 diff --git a/policy/modules/services/dbus.if b/policy/modules/services/dbus.if
-index d13a53a52..8a636e3f4 100644
+index 0137e0a1e..50b9f8299 100644
 --- a/policy/modules/services/dbus.if
 +++ b/policy/modules/services/dbus.if
 @@ -158,6 +158,9 @@ interface(`dbus_system_bus_client',`
@@ -60,10 +60,10 @@ index d13a53a52..8a636e3f4 100644
  	read_files_pattern($1, system_dbusd_var_lib_t, system_dbusd_var_lib_t)
  	read_lnk_files_pattern($1, system_dbusd_var_lib_t, system_dbusd_var_lib_t)
 diff --git a/policy/modules/services/dbus.te b/policy/modules/services/dbus.te
-index 2d1d09d71..6ae874dd7 100644
+index 4e2e32ec0..2b002c3ed 100644
 --- a/policy/modules/services/dbus.te
 +++ b/policy/modules/services/dbus.te
-@@ -282,6 +282,8 @@ optional_policy(`
+@@ -285,6 +285,8 @@ optional_policy(`
  
  optional_policy(`
  	unconfined_dbus_send(system_dbusd_t)
@@ -73,10 +73,10 @@ index 2d1d09d71..6ae874dd7 100644
  
  optional_policy(`
 diff --git a/policy/modules/system/authlogin.if b/policy/modules/system/authlogin.if
-index 6b9d957d3..7d079b596 100644
+index 51ed1a081..b088e31d7 100644
 --- a/policy/modules/system/authlogin.if
 +++ b/policy/modules/system/authlogin.if
-@@ -151,6 +151,7 @@ interface(`auth_read_pam_motd_dynamic',`
+@@ -154,6 +154,7 @@ interface(`auth_read_pam_motd_dynamic',`
  #
  interface(`auth_login_pgm_domain',`
  	gen_require(`
@@ -84,7 +84,7 @@ index 6b9d957d3..7d079b596 100644
  		type var_auth_t, auth_cache_t;
  	')
  
-@@ -158,6 +159,7 @@ interface(`auth_login_pgm_domain',`
+@@ -161,6 +162,7 @@ interface(`auth_login_pgm_domain',`
  	domain_subj_id_change_exemption($1)
  	domain_role_change_exemption($1)
  	domain_obj_id_change_exemption($1)
@@ -92,7 +92,7 @@ index 6b9d957d3..7d079b596 100644
  	role system_r types $1;
  
  	# Needed for pam_selinux_permit to cleanup properly
-@@ -226,6 +228,24 @@ interface(`auth_login_pgm_domain',`
+@@ -229,6 +231,24 @@ interface(`auth_login_pgm_domain',`
  	')
  ')
  
@@ -118,7 +118,7 @@ index 6b9d957d3..7d079b596 100644
  ## <summary>
  ##	Use the login program as an entry point program.
 diff --git a/policy/modules/system/authlogin.te b/policy/modules/system/authlogin.te
-index e65c0c41d..9dfef7a0c 100644
+index 58e48298b..f8c167f50 100644
 --- a/policy/modules/system/authlogin.te
 +++ b/policy/modules/system/authlogin.te
 @@ -22,6 +22,7 @@ gen_tunable(authlogin_nsswitch_use_ldap, false)
@@ -130,10 +130,10 @@ index e65c0c41d..9dfef7a0c 100644
  attribute pam_domain;
  
 diff --git a/policy/modules/system/systemd.te b/policy/modules/system/systemd.te
-index 222c89589..dab228bf6 100644
+index 8d1aa71d2..e994cc1ce 100644
 --- a/policy/modules/system/systemd.te
 +++ b/policy/modules/system/systemd.te
-@@ -960,6 +960,7 @@ term_use_unallocated_ttys(systemd_logind_t)
+@@ -1045,6 +1045,7 @@ term_use_unallocated_ttys(systemd_logind_t)
  
  auth_manage_faillog(systemd_logind_t)
  auth_use_nsswitch(systemd_logind_t)
@@ -141,7 +141,7 @@ index 222c89589..dab228bf6 100644
  
  init_dbus_send_script(systemd_logind_t)
  init_get_all_units_status(systemd_logind_t)
-@@ -987,6 +988,7 @@ systemd_start_power_units(systemd_logind_t)
+@@ -1072,6 +1073,7 @@ systemd_start_power_units(systemd_logind_t)
  udev_list_runtime(systemd_logind_t)
  udev_read_runtime_files(systemd_logind_t)
  
@@ -149,7 +149,7 @@ index 222c89589..dab228bf6 100644
  userdom_delete_all_user_runtime_dirs(systemd_logind_t)
  userdom_delete_all_user_runtime_files(systemd_logind_t)
  userdom_delete_all_user_runtime_named_pipes(systemd_logind_t)
-@@ -1032,6 +1034,7 @@ storage_raw_read_fixed_disk_cond(systemd_logind_t, systemd_logind_get_bootloader
+@@ -1126,6 +1128,7 @@ storage_raw_read_fixed_disk_cond(systemd_logind_t, systemd_logind_get_bootloader
  
  optional_policy(`
  	cloudinit_read_state(systemd_logind_t)
@@ -158,10 +158,10 @@ index 222c89589..dab228bf6 100644
  
  optional_policy(`
 diff --git a/policy/modules/system/unconfined.if b/policy/modules/system/unconfined.if
-index 658fc2218..f556c1c0e 100644
+index fff809d3d..176498b3c 100644
 --- a/policy/modules/system/unconfined.if
 +++ b/policy/modules/system/unconfined.if
-@@ -314,6 +314,24 @@ interface(`unconfined_use_fds',`
+@@ -317,6 +317,24 @@ interface(`unconfined_use_fds',`
  	allow $1 unconfined_t:fd use;
  ')
  
@@ -187,10 +187,10 @@ index 658fc2218..f556c1c0e 100644
  ## <summary>
  ##	Send a SIGCHLD signal to the unconfined domain.
 diff --git a/policy/modules/system/userdomain.if b/policy/modules/system/userdomain.if
-index 088cb87b2..492262498 100644
+index 677bad480..85a4ac02d 100644
 --- a/policy/modules/system/userdomain.if
 +++ b/policy/modules/system/userdomain.if
-@@ -4356,6 +4356,24 @@ interface(`userdom_lock_user_terminals',`
+@@ -4422,6 +4422,24 @@ interface(`userdom_lock_user_terminals',`
  	allow $1 user_devpts_t:chr_file lock;
  ')
  
@@ -216,5 +216,5 @@ index 088cb87b2..492262498 100644
  ## <summary>
  ##	Execute a shell in all user domains.  This
 -- 
-2.44.0
+2.49.0
 

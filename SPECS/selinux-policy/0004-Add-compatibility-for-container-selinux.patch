@@ -1,7 +1,7 @@
-From b0e9ac178eb3298ab714d871b8d33e0c81930c62 Mon Sep 17 00:00:00 2001
+From 717b7c7203a2d1fc1fddcd2fafa0c0d9e429d123 Mon Sep 17 00:00:00 2001
 From: Chris PeBenito <Christopher.PeBenito@microsoft.com>
 Date: Mon, 18 Apr 2022 15:15:34 +0000
-Subject: [PATCH 04/14] Add compatibility for container-selinux
+Subject: [PATCH 04/34] Add compatibility for container-selinux
 
 MSFT_TAG: Not upstreamable
 ---
@@ -15,10 +15,10 @@ MSFT_TAG: Not upstreamable
  create mode 100644 policy/modules/services/container_compat.te
 
 diff --git a/policy/modules/services/container.if b/policy/modules/services/container.if
-index 268ebec46..ab9d154ad 100644
+index 902c31b89..8ffe8b6d0 100644
 --- a/policy/modules/services/container.if
 +++ b/policy/modules/services/container.if
-@@ -1305,6 +1305,65 @@ interface(`container_watch_dirs',`
+@@ -1362,6 +1362,65 @@ interface(`container_watch_dirs',`
  	allow $1 container_file_t:dir watch;
  ')
  
@@ -84,7 +84,7 @@ index 268ebec46..ab9d154ad 100644
  ########################################
  ## <summary>
  ##	Allow the specified domain to
-@@ -1362,6 +1421,44 @@ interface(`container_dontaudit_relabel_files',`
+@@ -1437,6 +1496,44 @@ interface(`container_dontaudit_relabel_files',`
  	dontaudit $1 container_file_t:file { relabelfrom relabelto };
  ')
  
@@ -129,7 +129,7 @@ index 268ebec46..ab9d154ad 100644
  ########################################
  ## <summary>
  ##	Allow the specified domain to
-@@ -1438,6 +1535,44 @@ interface(`container_manage_sock_files',`
+@@ -1513,6 +1610,44 @@ interface(`container_manage_sock_files',`
  	manage_sock_files_pattern($1, container_file_t, container_file_t)
  ')
  
@@ -174,7 +174,7 @@ index 268ebec46..ab9d154ad 100644
  ########################################
  ## <summary>
  ##	Allow the specified domain to read
-@@ -1611,6 +1746,83 @@ interface(`container_read_home_config',`
+@@ -1706,6 +1841,83 @@ interface(`container_read_home_config',`
  	read_files_pattern($1, container_conf_home_t, container_conf_home_t)
  ')
  
@@ -258,7 +258,7 @@ index 268ebec46..ab9d154ad 100644
  ########################################
  ## <summary>
  ##	Allow the specified domain to
-@@ -2659,6 +2871,62 @@ interface(`container_start_units',`
+@@ -2754,6 +2966,62 @@ interface(`container_start_units',`
  	allow $1 container_unit_t:service start;
  ')
  
@@ -544,5 +544,5 @@ index 000000000..57f725b51
 +        udev_read_runtime_files(svirt_sandbox_domain)
 +')
 -- 
-2.43.2
+2.49.0
 

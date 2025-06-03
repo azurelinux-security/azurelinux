@@ -3,13 +3,14 @@
 %define monolithic n
 %define policy_name targeted
 %define refpolicy_major 2
-%define refpolicy_minor 20240226
+%define refpolicy_minor 20250213
 %define POLICYCOREUTILSVER 3.2
 %define CHECKPOLICYVER 3.2
+%define LIBSEPOLVER 3.6-2
 Summary:        SELinux policy
 Name:           selinux-policy
 Version:        %{refpolicy_major}.%{refpolicy_minor}
-Release:        11%{?dist}
+Release:        1%{?dist}
 License:        GPLv2
 Vendor:         Microsoft Corporation
 Distribution:   Azure Linux
@@ -44,20 +45,34 @@ Patch22:        0022-irqbalance-Dontaudit-net_admin.patch
 Patch23:        0023-systemd-tmpfiles-loadkeys-Read-var_t-symlinks.patch
 Patch24:        0024-systemd-tmpfiles-create-root-and-root-.ssh.patch
 Patch25:        0025-kernel-Exec-systemctl.patch
-Patch26:        0026-getty-grant-checkpoint_restore.patch
-Patch27:        0027-systemd-Add-basic-systemd-analyze-rules.patch
-Patch28:        0028-cloudinit-Add-support-for-cloud-init-growpart.patch
-Patch29:        0029-filesystem-systemd-memory.pressure-fixes.patch
-Patch30:        0030-init-Add-homectl-dbus-access.patch
-Patch31:        0031-Temporary-workaround-for-memory.pressure-labeling-is.patch
-Patch32:        0032-rpm-Fixes-from-various-post-scripts.patch
-Patch33:        0033-kmod-fix-for-run-modprobe.d.patch
-Patch34:        0034-systemd-Fix-dac_override-use-in-systemd-machine-id-s.patch
-Patch35:        0035-rpm-Run-systemd-sysctl-from-post.patch
-Patch36:        0036-fstools-Add-additional-perms-for-cloud-utils-growpar.patch
-Patch37:        0037-docker-Fix-dockerc-typo-in-container_engine_executab.patch
-Patch38:        0038-enable-liveos-iso-flow.patch
-Patch41:        0041-rpm-Allow-gpg-agent-run-in-rpm-scripts-to-watch-secr.patch
+Patch26:        0026-Temporary-workaround-for-memory.pressure-labeling-is.patch
+Patch27:        0027-rpm-Fixes-from-various-post-scripts.patch
+Patch28:        0028-kmod-fix-for-run-modprobe.d.patch
+Patch29:        0029-systemd-Fix-dac_override-use-in-systemd-machine-id-s.patch
+Patch30:        0030-rpm-Run-systemd-sysctl-from-post.patch
+Patch31:        0031-fstools-Add-additional-perms-for-cloud-utils-growpar.patch
+Patch32:        0032-Enable-LiveOS-ISO-Flow.patch
+Patch33:        0033-lvm-Add-fc-entries-for-veritysetup.patch
+Patch34:        0034-bootloader-Chane-efibootmgr-from-fsadm.patch
+Patch35:        0035-Revert-users-Move-unconfined_u-definition-to-unconfi.patch
+Patch36:        0036-files-init-filetrans-run-machine-id-etc_runtime_t.patch
+Patch37:        0037-locallogin-dontaudit-sulogin_t-checkpoint_restore.patch
+Patch38:        0038-locallogin-allow-sulogin_t-unconfined-domtrans.patch
+Patch39:        0039-Fix-mislabeling-of-etc-shadow.patch
+Patch40:        0040-systemd-allow-systemd-hostnamed-and-systemd-rfkill-t.patch
+Patch41:        0041-locallogin-allow-sulogin_t-user_tty_device_t-rw.patch
+Patch42:        0042-systemd-allow-reading-dev-cpu-0-msr.patch
+Patch43:        0043-systemd-Add-log-env-to-systemd-machine-id-setup.patch
+Patch44:        0044-loging-Silence-network-denials-if-logging_syslog_can.patch
+Patch45:        0045-selinuxutil-Load-policy-modules-from-cloud-init.patch
+Patch46:        0046-cloudinit-Misc-updates.patch
+Patch47:        0047-udev-Minor-fixes-for-udevadm.patch
+Patch48:        0048-getty-Minor-fx.patch
+Patch49:        0049-lvm-Minor-fix-for-systemd-veritysetup.patch
+Patch50:        0050-container-rw-fs-sysctls.patch
+Patch51:        0051-lvm-Add-fixes-for-systemd-repart.patch
+Patch52:        0052-docker-Read-PMD-mappable-transparent-hugepage-size.patch
+Patch53:        0053-systemd-systemd-journal-init-fixes.patch
 BuildRequires:  bzip2
 BuildRequires:  checkpolicy >= %{CHECKPOLICYVER}
 BuildRequires:  m4
@@ -188,12 +203,14 @@ SELinux policy documentation package
 %define common_makeopts DISTRO=%{distro} MONOLITHIC=%{monolithic} DESTDIR=%{buildroot} SYSTEMD=y DIRECT_INITRC=n MLS_CATS=1024 MCS_CATS=1024
 
 %define makeCmds() \
+export CHKCON=/bin/true PYTHON=python3 \
 %make_build UNK_PERMS=%{4} NAME=%{1} TYPE=%{2} UBAC=%{3} %{common_makeopts} bare \
 install -m0644 %{_sourcedir}/modules_%{1}.conf policy/modules.conf \
 %make_build UNK_PERMS=%{4} NAME=%{1} TYPE=%{2} UBAC=%{3} %{common_makeopts} conf \
 install -m0644 %{_sourcedir}/booleans_%{1}.conf policy/booleans.conf
 
 %define installCmds() \
+export CHKCON=/bin/true PYTHON=python3 \
 %make_build UNK_PERMS=%{4} NAME=%{1} TYPE=%{2} UBAC=%{3} %{common_makeopts} base.pp \
 %make_build validate UNK_PERMS=%{4} NAME=%{1} TYPE=%{2} UBAC=%{3} %{common_makeopts} modules \
 make UNK_PERMS=%{4} NAME=%{1} TYPE=%{2} UBAC=%{3} %{common_makeopts} install \
@@ -329,8 +346,9 @@ exit 0
 selinuxenabled && semodule -nB
 exit 0
 %changelog
-* Fri Apr 04 2025 Chris PeBenito <chpebeni@microsoft.com> - 2.20240226-11
-- Add fix for gpg-agent use in rpm scripts for watching root's secrets dir.
+* Thu Apr 29 2025 Chris PeBenito <chpebeni@microsoft.com> - 2.20250213-1
+- Update to new upstream release 2.20250213.
+- Add additional container host fixes.
 
 * Thu Mar 06 2025 Chris PeBenito <chpebeni@microsoft.com> - 2.20240226-10
 - Add tmpfs fix for cloud-utils-growpart.

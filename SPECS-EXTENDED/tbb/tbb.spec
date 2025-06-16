@@ -12,7 +12,7 @@ Release: 2%{?dist}
 License: Apache-2.0 AND BSD-3-Clause
 Vendor:         Microsoft Corporation
 Distribution:   Azure Linux
-URL:     http://threadingbuildingblocks.org/
+URL:     https://uxlfoundation.github.io/oneTBB/
 VCS:     git:%{giturl}.git
 
 Source0: https://github.com/intel/tbb/archive/v%{version}/%{name}-%{version}.tar.gz

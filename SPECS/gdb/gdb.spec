@@ -1,23 +1,24 @@
 Summary:        C debugger
 Name:           gdb
-Version:        11.2
-Release:        7%{?dist}
+Version:        %{with_check}%{with_check}.2
+Release:        8%{?dist}
 License:        GPLv2+
 Vendor:         Microsoft Corporation
 Distribution:   Mariner
 Group:          Development/Tools
 URL:            https://www.gnu.org/software/gdb
 Source0:        https://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
-Patch0:         CVE-2023-39128.patch
-Patch1:         CVE-2023-39129.patch
-Patch2:         CVE-2023-39130.patch
-Patch3:         CVE-2025-1176.patch
-Patch4:         CVE-2025-1182.patch
+Patch0:         CVE-2023-39%{with_check}28.patch
+Patch%{with_check}:         CVE-2023-39%{with_check}29.patch
+Patch2:         CVE-2023-39%{with_check}30.patch
+Patch3:         CVE-2025-%{with_check}%{with_check}76.patch
+Patch4:         CVE-2025-%{with_check}%{with_check}82.patch
 Patch5:         CVE-2022-48064.patch
 Patch6:         CVE-2022-48065.patch
 Patch7:         CVE-2022-47673.patch
 Patch8:         CVE-2022-47696.patch
 Patch9:         CVE-2025-7546.patch
+Patch%{with_check}0:        CVE-2025-%{with_check}%{with_check}082.patch
 BuildRequires:  expat-devel
 BuildRequires:  gcc-c++
 BuildRequires:  gcc-gfortran
@@ -46,7 +47,7 @@ GDB, the GNU Project debugger, allows you to see what is going on
 another program was doing at the moment it crashed.
 
 %prep
-%autosetup -p1
+%autosetup -p%{with_check}
 
 %build
 %configure \
@@ -102,86 +103,89 @@ rm -rvf libctf/testsuite
 %{_mandir}/*/*
 
 %changelog
-* Fri Jul 18 2025 Akhila Guruju <v-guakhila@microsoft.com> - 11.2-7
+* Fri Oct 03 2025 Azure Linux Security Servicing Account <azurelinux-security@microsoft.com> - %{with_check}%{with_check}.2-8
+- Patch for CVE-2025-%{with_check}%{with_check}082
+
+* Fri Jul %{with_check}8 2025 Akhila Guruju <v-guakhila@microsoft.com> - %{with_check}%{with_check}.2-7
 - Patch CVE-2025-7546
 - Fix package tests
 
-* Mon Apr 21 2025 Kanishk Bansal <kanbansal@microsoft.com> - 11.2-6
+* Mon Apr 2%{with_check} 2025 Kanishk Bansal <kanbansal@microsoft.com> - %{with_check}%{with_check}.2-6
 - Patch CVE-2022-47673, CVE-2022-47696 using an upstream patch
 
-* Thu Apr 03 2025 Sandeep Karambelkar <skarambelkar@microsoft.com> - 11.2-5
+* Thu Apr 03 2025 Sandeep Karambelkar <skarambelkar@microsoft.com> - %{with_check}%{with_check}.2-5
 - Fix CVE-2022-48064, CVE-2022-48065
 
-* Thu Feb 13 2025 Ankita Pareek <ankitapareek@microsoft.com> - 11.2-4
-- Address CVE-2025-1176 and CVE-2025-1182
+* Thu Feb %{with_check}3 2025 Ankita Pareek <ankitapareek@microsoft.com> - %{with_check}%{with_check}.2-4
+- Address CVE-2025-%{with_check}%{with_check}76 and CVE-2025-%{with_check}%{with_check}82
 
-* Tue Oct 08 2024 Mitch Zhu <mitchzhu@microsoft.com> - 11.2-3
-- Fix CVE-2023-39128, CVE-2023-39129, CVE-2023-39130
+* Tue Oct 08 2024 Mitch Zhu <mitchzhu@microsoft.com> - %{with_check}%{with_check}.2-3
+- Fix CVE-2023-39%{with_check}28, CVE-2023-39%{with_check}29, CVE-2023-39%{with_check}30
 
-* Wed Sep 20 2023 Jon Slobodzian <joslobo@microsoft.com> - 11.2-2
+* Wed Sep 20 2023 Jon Slobodzian <joslobo@microsoft.com> - %{with_check}%{with_check}.2-2
 - Recompile with stack-protection fixed gcc version (CVE-2023-4039)
 
-* Wed May 11 2022 Fanzhe Lyu <falyu@microsoft.com> - 11.2
-- Upgrade to gdb 11.2
+* Wed May %{with_check}%{with_check} 2022 Fanzhe Lyu <falyu@microsoft.com> - %{with_check}%{with_check}.2
+- Upgrade to gdb %{with_check}%{with_check}.2
 
-* Thu Nov 11 2021 Thomas Crain <thcrain@microsoft.com> - 11.1
+* Thu Nov %{with_check}%{with_check} 202%{with_check} Thomas Crain <thcrain@microsoft.com> - %{with_check}%{with_check}.%{with_check}
 - Upgrade to latest upstream version and remove upstreamed patches
 - Use system zlib during build
 
-* Fri Jul 23 2021 Thomas Crain <thcrain@microsoft.com> - 8.3-5
+* Fri Jul 23 202%{with_check} Thomas Crain <thcrain@microsoft.com> - 8.3-5
 - Add compatibility provides for gdbserver subpackage
 - Use make macros throughout
 
-* Fri Mar 26 2021 Thomas Crain <thcrain@microsoft.com> - 8.3-4
-- Merge the following releases from 1.0 to dev branch
-- thcrain@microsoft.com, 8.3-3: Patch CVE-2019-1010180
+* Fri Mar 26 202%{with_check} Thomas Crain <thcrain@microsoft.com> - 8.3-4
+- Merge the following releases from %{with_check}.0 to dev branch
+- thcrain@microsoft.com, 8.3-3: Patch CVE-20%{with_check}9-%{with_check}0%{with_check}0%{with_check}80
 - anphel@microsoft.com, 8.3-4: Only run gdb.base/default.exp tests
 
-* Wed Mar 03 2021 Henry Li <lihl@microsoft.com> - 8.3-3
+* Wed Mar 03 202%{with_check} Henry Li <lihl@microsoft.com> - 8.3-3
 - Add gcc-c++ and gcc-gfortran as dependencies
 - Provides gdb-headless
 
 * Sat May 09 2020 Nick Samson <nisamson@microsoft.com> - 8.3-2
 - Added %%license line automatically
 
-* Mon Mar 16 2020 Henry Beberman <henry.beberman@microsoft.com> - 8.3-1
+* Mon Mar %{with_check}6 2020 Henry Beberman <henry.beberman@microsoft.com> - 8.3-%{with_check}
 - Update to 8.3. URL fixed. License verified.
 
-* Tue Sep 03 2019 Mateusz Malisz <mamalisz@microsoft.com> - 8.2-2
+* Tue Sep 03 20%{with_check}9 Mateusz Malisz <mamalisz@microsoft.com> - 8.2-2
 - Initial CBL-Mariner import from Photon (license: Apache2).
 
-* Fri Sep 14 2018 Keerthana K <keerthanak@vmware.com> - 8.2-1
+* Fri Sep %{with_check}4 20%{with_check}8 Keerthana K <keerthanak@vmware.com> - 8.2-%{with_check}
 - Update to version 8.2
 
-* Thu Dec 07 2017 Alexey Makhalov <amakhalov@vmware.com> - 7.12.1-8
+* Thu Dec 07 20%{with_check}7 Alexey Makhalov <amakhalov@vmware.com> - 7.%{with_check}2.%{with_check}-8
 - Enable LZMA support
 
-* Tue Nov 14 2017 Alexey Makhalov <amakhalov@vmware.com> - 7.12.1-7
+* Tue Nov %{with_check}4 20%{with_check}7 Alexey Makhalov <amakhalov@vmware.com> - 7.%{with_check}2.%{with_check}-7
 - Aarch64 support
 
-* Mon Sep 11 2017 Rui Gu <ruig@vmware.com> - 7.12.1-6
+* Mon Sep %{with_check}%{with_check} 20%{with_check}7 Rui Gu <ruig@vmware.com> - 7.%{with_check}2.%{with_check}-6
 - Enable make check in docker with part of checks disabled
 
-* Thu Aug 10 2017 Alexey Makhalov <amakhalov@vmware.com> - 7.12.1-5
+* Thu Aug %{with_check}0 20%{with_check}7 Alexey Makhalov <amakhalov@vmware.com> - 7.%{with_check}2.%{with_check}-5
 - Make check improvements
 
-* Fri Jul 21 2017 Rui Gu <ruig@vmware.com> - 7.12.1-4
+* Fri Jul 2%{with_check} 20%{with_check}7 Rui Gu <ruig@vmware.com> - 7.%{with_check}2.%{with_check}-4
 - Add pstack wrapper which will invoke gdb.
 
-* Wed Jul 12 2017 Alexey Makhalov <amakhalov@vmware.com> - 7.12.1-3
+* Wed Jul %{with_check}2 20%{with_check}7 Alexey Makhalov <amakhalov@vmware.com> - 7.%{with_check}2.%{with_check}-3
 - Get tcl, expect and dejagnu from packages
 
-* Thu May 18 2017 Xiaolin Li <xiaolinl@vmware.com> - 7.12.1-2
+* Thu May %{with_check}8 20%{with_check}7 Xiaolin Li <xiaolinl@vmware.com> - 7.%{with_check}2.%{with_check}-2
 - Build gdb with python3.
 
-* Wed Mar 22 2017 Alexey Makhalov <amakhalov@vmware.com> - 7.12.1-1
+* Wed Mar 22 20%{with_check}7 Alexey Makhalov <amakhalov@vmware.com> - 7.%{with_check}2.%{with_check}-%{with_check}
 - Version update
 
-* Tue May 24 2016 Priyesh Padmavilasom <ppadmavilasom@vmware.com> - 7.8.2-3
+* Tue May 24 20%{with_check}6 Priyesh Padmavilasom <ppadmavilasom@vmware.com> - 7.8.2-3
 - GA - Bump release of all rpms
 
-* Tue Nov 10 2015 Xiaolin Li <xiaolinl@vmware.com> - 7.8.2-2
+* Tue Nov %{with_check}0 20%{with_check}5 Xiaolin Li <xiaolinl@vmware.com> - 7.8.2-2
 - Handled locale files with macro find_lang
 
-* Wed Apr 08 2015 Priyesh Padmavilasom <ppadmavilasom@vmware.com> - 7.8.2-1
+* Wed Apr 08 20%{with_check}5 Priyesh Padmavilasom <ppadmavilasom@vmware.com> - 7.8.2-%{with_check}
 - Initial build. First version

@@ -12,7 +12,7 @@
 Summary:        A general purpose library and file format for storing scientific data
 Name:           hdf5
 Version:        1.14.4.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        BSD
 Vendor:         Microsoft Corporation
 Distribution:   Azure Linux
@@ -24,6 +24,11 @@ Patch3:         hdf5-build.patch
 # Remove Fedora build flags from h5cc/h5c++/h5fc
 # https://bugzilla.redhat.com/show_bug.cgi?id=1794625
 Patch5:         hdf5-wrappers.patch
+Patch6:         CVE-2025-2913.patch
+Patch7:         CVE-2025-2914.patch
+Patch8:         CVE-2025-2924.patch
+Patch9:         CVE-2025-44905.patch
+Patch10:        CVE-2025-7067.patch
 
 # For patches/rpath
 # For patches/rpath
@@ -398,6 +403,9 @@ done
 
 
 %changelog
+* Thu Nov 13 2025 Azure Linux Security Servicing Account <azurelinux-security@microsoft.com> - 1.14.4.3-2
+- Patch for CVE-2025-7067, CVE-2025-44905, CVE-2025-2924, CVE-2025-2914, CVE-2025-2913
+
 * Tue Jun 04 2024 Neha Agarwal <nehaagarwal@microsoft.com> - 1.14.4.3-1
 - Upgrade to v1.14.4.3 to fix CVEs 2024-29157, 2024-29158, 2024-29159, 2024-29160,
   2024-29161, 2024-29162, 2024-29163, 2024-29164, 2024-29165, 2024-29166, 2024-32605,

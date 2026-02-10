@@ -35,6 +35,8 @@ Patch9:         CVE-2025-22872.patch
 Patch10:        CVE-2025-68156.patch
 Patch11:        CVE-2025-68476.patch
 Patch12:        CVE-2025-11065.patch
+Patch13:        CVE-2025-47911.patch
+Patch14:        CVE-2025-58190.patch
 BuildRequires:  golang >= 1.15
 
 %description
@@ -72,6 +74,7 @@ cp ./bin/keda-admission-webhooks %{buildroot}%{_bindir}
 %changelog
 * Tue Feb 10 2026 Azure Linux Security Servicing Account <azurelinux-security@microsoft.com> - 2.14.1-10
 - Patch for CVE-2025-11065
+- Patch for CVE-2025-58190, CVE-2025-47911
 
 * Fri Jan 02 2026 Azure Linux Security Servicing Account <azurelinux-security@microsoft.com> - 2.14.1-9
 - Patch for CVE-2025-68476

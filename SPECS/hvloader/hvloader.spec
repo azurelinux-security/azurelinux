@@ -39,6 +39,7 @@ Patch21:        CVE-2025-2296.patch
 Patch22:        CVE-2025-2295.patch
 Patch23:        CVE-2025-69420.patch
 Patch24:        CVE-2025-69419.patch
+Patch25:        CVE-2025-69421.patch
 
 BuildRequires:  bc
 BuildRequires:  gcc
@@ -85,7 +86,7 @@ cp ./Build/MdeModule/RELEASE_GCC5/X64/MdeModulePkg/Application/%{name_github}-%{
 
 %changelog
 * Tue Feb 10 2026 Azure Linux Security Servicing Account <azurelinux-security@microsoft.com> - 1.0.1-17
-- Patch for CVE-2025-69420, CVE-2025-69419
+- Patch for CVE-2025-69420, CVE-2025-69419, CVE-2025-69421
 
 * Tue Jan 06 2026 Azure Linux Security Servicing Account <azurelinux-security@microsoft.com> - 1.0.1-16
 - Patch for CVE-2025-2295

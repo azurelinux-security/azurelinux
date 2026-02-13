@@ -31,6 +31,7 @@ Patch3:        CVE-2025-22872.patch
 Patch4:        CVE-2025-53547.patch
 Patch5:        CVE-2025-55198.patch
 Patch6:        CVE-2025-58190.patch
+Patch7:        CVE-2025-47911.patch
 BuildRequires: golang
 
 %description
@@ -61,7 +62,7 @@ go test -v ./cmd/helm
 
 %changelog
 * Fri Feb 13 2026 Azure Linux Security Servicing Account <azurelinux-security@microsoft.com> - 3.14.2-10
-- Patch for CVE-2025-58190
+- Patch for CVE-2025-58190, CVE-2025-47911
 
 * Fri Sep 19 2025 Azure Linux Security Servicing Account <azurelinux-security@microsoft.com> - 3.14.2-9
 - Patch for CVE-2025-55198

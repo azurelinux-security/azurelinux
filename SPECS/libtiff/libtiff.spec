@@ -1,7 +1,7 @@
 Summary:        TIFF libraries and associated utilities.
 Name:           libtiff
 Version:        4.6.0
-Release:        12%{?dist}
+Release:        13%{?dist}
 License:        libtiff
 Vendor:         Microsoft Corporation
 Distribution:   Mariner
@@ -23,6 +23,8 @@ Patch11:        CVE-2024-13978.patch
 Patch12:        CVE-2025-8961.patch
 Patch13:        CVE-2025-61143.patch
 Patch14:        CVE-2025-61144.patch
+Patch15:        CVE-2025-61143.patch
+Patch16:        CVE-2025-61144.patch
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  libjpeg-turbo-devel
@@ -75,6 +77,9 @@ make %{?_smp_mflags} -k check
 %{_docdir}/*
 
 %changelog
+* Tue Mar 03 2026 Azure Linux Security Servicing Account <azurelinux-security@microsoft.com> - 4.6.0-13
+- Patch for CVE-2025-61144, CVE-2025-61143
+
 * Wed Feb 25 2026 Azure Linux Security Servicing Account <azurelinux-security@microsoft.com> - 4.6.0-12
 - Patch for CVE-2025-61144, CVE-2025-61143
 

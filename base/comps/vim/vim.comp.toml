@@ -2,4 +2,34 @@
 # the gpm SRPM entirely to sdk. vim.spec uses bcond gating for GPM
 # (default ON when fedora is set); flip it off via build.without.
 [components.vim]
+release = { calculation = "manual" }
 build.without = ["gpm"]
+
+[[components.vim.overlays]]
+description = "Fix CVE-2026-55892 — https://github.com/vim/vim/commit/8325b193bba5f01e7a7d8241f"
+type = "patch-add"
+source = "CVE-2026-55892.patch"
+
+[[components.vim.overlays]]
+description = "Apply CVE-2026-55892 patch"
+type = "spec-append-lines"
+section = "%prep"
+lines = [
+    "%patch -P10001 -p1",
+]
+
+[[components.vim.overlays]]
+description = "Bump release for CVE-2026-55892"
+type = "spec-set-tag"
+tag = "Release"
+value = "5%{?dist}"
+
+[[components.vim.overlays]]
+description = "Add changelog entry for CVE-2026-55892"
+type = "spec-prepend-lines"
+section = "%changelog"
+lines = [
+    "* Sat Jul 04 2026 Azure Linux Security Servicing Account <azurelinux-security@microsoft.com> - 2:9.1.2146-5",
+    "- Patch for CVE-2026-55892",
+    "",
+]

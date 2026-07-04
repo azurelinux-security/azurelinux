@@ -412,7 +412,6 @@ includes = ["**/*.comp.toml", "component-check-disablement.toml", "component-min
 [components.exif]
 [components.exiv2]
 [components.exo]
-[components.expat]
 [components.expect]
 [components.expected]
 [components.extra-cmake-modules]

@@ -1,0 +1,11 @@
+[components.expat]
+
+[[components.expat.overlays]]
+description = "Fix CVE-2026-56409 — https://github.com/libexpat/libexpat/pull/1259"
+type = "patch-add"
+source = "CVE-2026-56409.patch"
+
+[[components.expat.overlays]]
+description = "Fix CVE-2026-56411 — https://github.com/libexpat/libexpat/pull/1263"
+type = "patch-add"
+source = "CVE-2026-56411.patch"

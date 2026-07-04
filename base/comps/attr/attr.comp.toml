@@ -1,0 +1,6 @@
+[components.attr]
+
+[[components.attr.overlays]]
+description = "Fix CVE-2026-54371 — https://cgit.git.savannah.nongnu.org/cgit/attr.git/commit/?id=c440855d6b33446edf4b5eb1a2d892281f15a99b"
+type = "patch-add"
+source = "CVE-2026-54371.patch"

@@ -4,7 +4,7 @@
 Summary: Utilities for managing filesystem extended attributes
 Name: attr
 Version: 2.5.2
-Release: 7%{?dist}
+Release: 8%{?dist}
 Source0: https://download.savannah.nongnu.org/releases/attr/attr-%{version}.tar.xz
 Source1: https://download.savannah.nongnu.org/releases/attr/attr-%{version}.tar.xz.sig
 # Retreived from https://savannah.nongnu.org/people/viewgpg.php?user_id=15000
@@ -29,6 +29,7 @@ Requires: libattr%{?_isa} = %{version}-%{release}
 # needed for %%check
 BuildRequires: perl(FileHandle)
 
+Patch4: CVE-2026-54371.patch
 %description
 A set of tools for manipulating extended attributes on filesystem
 objects, in particular getfattr(1) and setfattr(1).

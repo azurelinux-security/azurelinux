@@ -1866,7 +1866,6 @@ includes = ["**/*.comp.toml", "component-check-disablement.toml", "component-min
 [components.librelp]
 [components.librepo]
 [components.libreport]
-[components.libreswan]
 [components.libretls]
 [components.librevenge]
 [components.librhsm]

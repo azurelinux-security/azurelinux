@@ -10,7 +10,7 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: curl
 Version: 8.15.0
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: curl
 Source0: https://curl.se/download/%{name}-%{version_no_tilde}.tar.xz
 Source1: https://curl.se/download/%{name}-%{version_no_tilde}.tar.xz.asc
@@ -165,6 +165,9 @@ Requires: libcurl%{?_isa} >= %{version}-%{release}
 # (we need to translate 3.0.0-alpha16 -> 3.0.0-0.alpha16 and 3.0.0-beta1 -> 3.0.0-0.beta1 though)
 %global openssl_version %({ pkg-config --modversion openssl 2>/dev/null || echo 0;} | sed 's|-|-0.|')
 
+Patch106: CVE-2026-12064.patch
+Patch107: CVE-2026-8927.patch
+Patch108: CVE-2026-9547.patch
 %description
 curl is a command line tool for transferring data with URL syntax, supporting
 FTP, FTPS, HTTP, HTTPS, SCP, SFTP, TFTP, TELNET, DICT, LDAP, LDAPS, FILE, IMAP,
@@ -423,6 +426,9 @@ rm -f ${RPM_BUILD_ROOT}%{_mandir}/man1/wcurl.1*
 %{_libdir}/libcurl.so.4.[0-9].[0-9].minimal
 
 %changelog
+* Mon Jul 06 2026 Azure Linux Security Servicing Account <azurelinux-security@microsoft.com> - 8.15.0-8
+- Patch for CVE-2026-12064, CVE-2026-8927, CVE-2026-9547
+
 * Mon Jan 19 2026 Jan Macku <jamacku@redhat.com> - 8.15.0-5
 - fix broken TLS options for threaded LDAPS (CVE-2025-14017)
 

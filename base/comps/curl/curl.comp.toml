@@ -1,4 +1,5 @@
 [components.curl]
+release = { calculation = "manual" }
 
 [[components.curl.overlays]]
 description = "Drop python3-impacket BuildRequires (only used by Fedora-gated upstream test 1451; python-impacket is not packaged for Azure Linux due to RPM-signing issues)"
@@ -14,3 +15,34 @@ description = "Annotate the now-empty %if 0%{?fedora} block to make the AZL devi
 type = "spec-search-replace"
 regex = '^# needed for upstream test 1451$'
 replacement = '# python3-impacket BuildRequires intentionally omitted in Azure Linux — see curl.comp.toml overlay (RPM signing blocker; test 1451 is Fedora-gated)'
+
+[[components.curl.overlays]]
+description = "Fix CVE-2026-12064 — https://github.com/curl/curl/commit/ab3bb8cd8be8f9d4acb97da041.patch"
+type = "patch-add"
+source = "CVE-2026-12064.patch"
+
+[[components.curl.overlays]]
+description = "Fix CVE-2026-8927 — https://github.com/curl/curl/commit/5c225384b8d52c6.patch"
+type = "patch-add"
+source = "CVE-2026-8927.patch"
+
+[[components.curl.overlays]]
+description = "Fix CVE-2026-9547 — https://github.com/curl/curl/commit/0b8dbbc63c98777e4584cb9fbd71df3464008ad1.patch"
+type = "patch-add"
+source = "CVE-2026-9547.patch"
+
+[[components.curl.overlays]]
+description = "Bump release for CVE-2026-12064, CVE-2026-8927, CVE-2026-9547"
+type = "spec-set-tag"
+tag = "Release"
+value = "8%{?dist}"
+
+[[components.curl.overlays]]
+description = "Add changelog entry for CVE-2026-12064, CVE-2026-8927, CVE-2026-9547"
+type = "spec-prepend-lines"
+section = "%changelog"
+lines = [
+    "* Mon Jul 06 2026 Azure Linux Security Servicing Account <azurelinux-security@microsoft.com> - 8.15.0-8",
+    "- Patch for CVE-2026-12064, CVE-2026-8927, CVE-2026-9547",
+    "",
+]

@@ -2,7 +2,7 @@
 
 Name:           kata-containers
 Version:        3.32.0.kata0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Kata Containers package developed for Pod Sandboxing on AKS
 License:        ASL 2.0
 URL:            https://github.com/microsoft/kata-containers
@@ -15,6 +15,7 @@ Patch0:         dbs-arch-cpuid-unsafe.patch
 Patch1:         CVE-2025-11065.patch
 Patch2:         CVE-2026-41602.patch
 Patch3:         CVE-2026-56852.patch
+Patch4:         CVE-2026-25800.patch
 BuildRequires:  azurelinux-release
 BuildRequires:  golang
 BuildRequires:  protobuf-compiler
@@ -140,6 +141,9 @@ install -m 0644 \
 %{tools_pkg}/tools/osbuilder/node-builder/azure-linux/agent-install/usr/lib/systemd/system/kata-agent.service
 
 %changelog
+* Mon Aug 03 2026 Azure Linux Security Servicing Account <azurelinux-security@microsoft.com> - 3.32.0.kata0-2
+- Patch for CVE-2026-25800
+
 * Mon Jul 27 2026 CBL-Mariner Servicing Account <cblmargh@microsoft.com> - 3.32.0.kata0-1
 - Auto-upgrade to 3.32.0.kata0
 - Add preview configurations for VM templating

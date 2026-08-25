@@ -1,7 +1,7 @@
 Summary:        Fast and Lightweight Log processor and forwarder for Linux, BSD and OSX
 Name:           fluent-bit
 Version:        3.1.10
-Release:        6%{?dist}
+Release:        7%{?dist}
 License:        Apache-2.0
 Vendor:         Microsoft Corporation
 Distribution:   Azure Linux
@@ -21,6 +21,12 @@ Patch10:        CVE-2025-12969.patch
 Patch11:        CVE-2025-62408.patch
 Patch12:        CVE-2025-63657.patch
 Patch13:        CVE-2025-63652.patch
+Patch14:        CVE-2026-63381.patch
+Patch15:        CVE-2026-63382.patch
+Patch16:        CVE-2026-63383.patch
+Patch17:        CVE-2026-63384.patch
+Patch18:        CVE-2026-63385.patch
+Patch19:        CVE-2026-63387.patch
 BuildRequires:  bison
 BuildRequires:  cmake
 BuildRequires:  cyrus-sasl-devel
@@ -95,6 +101,9 @@ Development files for %{name}
 %{_libdir}/fluent-bit/*.so
 
 %changelog
+* Tue Aug 25 2026 Azure Linux Security Servicing Account <azurelinux-security@microsoft.com> - 3.1.10-7
+- Patch for CVE-2026-63387, CVE-2026-63385, CVE-2026-63384, CVE-2026-63383, CVE-2026-63382, CVE-2026-63381
+
 * Thu Apr 23 2026 Azure Linux Security Servicing Account <azurelinux-security@microsoft.com> - 3.1.10-6
 - Patch for CVE-2025-63652
 

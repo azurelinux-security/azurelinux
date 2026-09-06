@@ -29,13 +29,14 @@ Patch16:        CVE-2026-55951.patch
 Patch17:        CVE-2026-66357.patch
 Patch18:        CVE-2026-69664.patch
 Patch19:        CVE-2026-70399.patch
-Patch20:        CVE-2026-71380.patch
-Patch21:        CVE-2026-73270.patch
-Patch22:        CVE-2026-73276.patch
-Patch23:        CVE-2026-73812.patch
-Patch24:        CVE-2026-74835.patch
-Patch25:        CVE-2026-74994.patch
-Patch26:        CVE-2026-75538.patch
+Patch20:        CVE-2026-73270.patch
+Patch21:        CVE-2026-73276.patch
+Patch22:        CVE-2026-73812.patch
+Patch23:        CVE-2026-74835.patch
+Patch24:        CVE-2026-74994.patch
+Patch25:        CVE-2026-75538.patch
+# Applied last: rebased on top of the other inets fixes it shares context with.
+Patch26:        CVE-2026-71380.patch
 BuildRequires:  ncurses-devel
 BuildRequires:  openssl-devel
 BuildRequires:  unixODBC-devel
@@ -82,6 +83,7 @@ export ERL_TOP=`pwd`
 %changelog
 * Fri Sep 04 2026 Azure Linux Security Servicing Account <azurelinux-security@microsoft.com> - 26.2.5.21-6
 - Patch for CVE-2026-75538, CVE-2026-74994, CVE-2026-74835, CVE-2026-73812, CVE-2026-73276, CVE-2026-73270, CVE-2026-71380, CVE-2026-70399, CVE-2026-69664, CVE-2026-66357, CVE-2026-55951
+- Also covers CVE-2026-71562, CVE-2026-70409, CVE-2026-70405, CVE-2026-66835, CVE-2026-59696, which share upstream fixes with the patches above
 
 
 * Tue Aug 11 2026 Aditya Singh <v-aditysing@microsoft.com> - 26.2.5.21-5

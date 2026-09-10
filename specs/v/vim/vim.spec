@@ -60,7 +60,7 @@ Summary: The VIM editor
 URL:     https://www.vim.org/
 Name: vim
 Version: %{baseversion}.%{patchlevel}
-Release: 4%{?dist}
+Release: 5%{?dist}
 Epoch: 2
 # swift.vim contains Apache 2.0 with runtime library exception:
 # which is taken as Apache-2.0 WITH Swift-exception - reported to legal as https://gitlab.com/fedora/legal/fedora-license-data/-/issues/188
@@ -196,6 +196,7 @@ BuildRequires: libselinux-devel
 %endif
 
 
+Patch10001: CVE-2026-55892.patch
 %description
 VIM (VIsual editor iMproved) is an updated and improved version of the
 vi editor.  Vi was the first real screen-based editor for UNIX, and is
@@ -425,6 +426,7 @@ perl -pi -e "s,bin/nawk,bin/awk,g" runtime/tools/mve.awk
 %endif
 
 
+%patch -P10001 -p1
 %build
 cd src
 autoconf
@@ -1025,6 +1027,9 @@ install -p -m644 %{SOURCE11} %{buildroot}/%{_datadir}/fish/vendor_conf.d/vim-def
 
 
 %changelog
+* Sat Jul 04 2026 Azure Linux Security Servicing Account <azurelinux-security@microsoft.com> - 2:9.1.2146-5
+- Patch for CVE-2026-55892
+
 * Mon Feb 16 2026 Zdenek Dohnal <zdohnal@redhat.com> - 2:9.1.2146-2
 - provide previous vi->vim alias (fedora#2439657)
 

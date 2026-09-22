@@ -1,0 +1,13 @@
+[components.libreswan]
+
+[[components.libreswan.overlays]]
+description = "Fix CVE-2026-50722 — https://libreswan.org/security/CVE-2026-50722/libreswan-5.3-CVE-2026-50722.patch"
+type = "file-add"
+file = "CVE-2026-50722.patch"
+source = "CVE-2026-50722.patch"
+
+[[components.libreswan.overlays]]
+description = "Register CVE-2026-50722 patch as Patch2"
+type = "spec-insert-tag"
+tag = "Patch2"
+value = "CVE-2026-50722.patch"

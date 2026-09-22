@@ -60,7 +60,7 @@ Summary: The VIM editor
 URL:     https://www.vim.org/
 Name: vim
 Version: %{baseversion}.%{patchlevel}
-Release: 4%{?dist}
+Release: 5%{?dist}
 Epoch: 2
 # swift.vim contains Apache 2.0 with runtime library exception:
 # which is taken as Apache-2.0 WITH Swift-exception - reported to legal as https://gitlab.com/fedora/legal/fedora-license-data/-/issues/188
@@ -117,6 +117,8 @@ Patch10: vim-test-port-mismatch.patch
 
 # patch only when hunspell is enabled
 Patch10000: vim-7.0-hunspell.patch
+Patch10001: CVE-2026-55892.patch
+Patch10002: CVE-2026-59857.patch
 
 
 # uses autoconf in spec file
@@ -425,6 +427,8 @@ perl -pi -e "s,bin/nawk,bin/awk,g" runtime/tools/mve.awk
 %endif
 
 
+%patch -P10001 -p1
+%patch -P10002 -p1
 %build
 cd src
 autoconf

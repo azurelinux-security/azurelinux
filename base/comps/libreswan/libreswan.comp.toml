@@ -1,0 +1,6 @@
+[components.libreswan]
+
+[[components.libreswan.overlays]]
+description = "Fix CVE-2026-50722 — https://libreswan.org/security/CVE-2026-50722/libreswan-5.3-CVE-2026-50722.patch"
+type = "patch-add"
+source = "CVE-2026-50722.patch"

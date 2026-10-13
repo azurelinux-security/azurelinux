@@ -67,6 +67,7 @@ Patch18:        CVE-2026-78660.patch
 Patch19:        CVE-2026-78663.patch
 Patch20:        CVE-2026-78669.patch
 Patch21:        CVE-2026-97032.patch
+Patch22:        CVE-2026-61801.patch
 
 BuildRequires:  flex-devel
 BuildRequires:  glibc-static >= 2.38-21%{?dist}

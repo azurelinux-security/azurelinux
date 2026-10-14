@@ -1,0 +1,21 @@
+[components.opensc]
+
+[[components.opensc.overlays]]
+description = "Fix CVE-2026-103531 — https://github.com/OpenSC/OpenSC/commit/ad730304052937c32b4eb489a06835ac6123632c"
+type = "file-add"
+file = "CVE-2026-103531.patch"
+source = "CVE-2026-103531.patch"
+
+[[components.opensc.overlays]]
+description = "Register CVE-2026-103531 patch as Patch13"
+type = "spec-insert-tag"
+tag = "Patch13"
+value = "CVE-2026-103531.patch"
+
+[[components.opensc.overlays]]
+description = "Apply CVE-2026-103531 patch (CVE-2026-103531.patch)"
+type = "spec-append-lines"
+section = "%prep"
+lines = [
+    "%patch -P13 -p1",
+]

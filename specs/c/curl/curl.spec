@@ -10,7 +10,7 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: curl
 Version: 8.15.0
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: curl
 Source0: https://curl.se/download/%{name}-%{version_no_tilde}.tar.xz
 Source1: https://curl.se/download/%{name}-%{version_no_tilde}.tar.xz.asc
@@ -30,6 +30,13 @@ Patch101: 0101-curl-7.32.0-multilib.patch
 
 # test616: disable valgrind
 Patch105: 0105-curl-8.11.1-test616.patch
+Patch106: CVE-2025-10148.patch
+Patch107: CVE-2025-14524.patch
+Patch108: CVE-2025-15079.patch
+Patch109: CVE-2025-15224.patch
+Patch110: CVE-2026-13608.patch
+Patch111: CVE-2026-5545.patch
+Patch112: CVE-2026-80229.patch
 
 Provides: curl-full = %{version}-%{release}
 # do not fail when trying to install curl-minimal after drop

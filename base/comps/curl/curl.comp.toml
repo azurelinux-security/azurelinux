@@ -1,2 +1,85 @@
 [components.curl]
 
+[[components.curl.overlays]]
+description = "Fix CVE-2025-10148 — http://www.openwall.com/lists/oss-security/2025/09/10/2"
+type = "file-add"
+file = "CVE-2025-10148.patch"
+source = "CVE-2025-10148.patch"
+
+[[components.curl.overlays]]
+description = "Register CVE-2025-10148 patch as Patch106"
+type = "spec-insert-tag"
+tag = "Patch106"
+value = "CVE-2025-10148.patch"
+
+[[components.curl.overlays]]
+description = "Fix CVE-2025-14524 — http://www.openwall.com/lists/oss-security/2026/01/07/4"
+type = "file-add"
+file = "CVE-2025-14524.patch"
+source = "CVE-2025-14524.patch"
+
+[[components.curl.overlays]]
+description = "Register CVE-2025-14524 patch as Patch107"
+type = "spec-insert-tag"
+tag = "Patch107"
+value = "CVE-2025-14524.patch"
+
+[[components.curl.overlays]]
+description = "Fix CVE-2025-15079 — http://www.openwall.com/lists/oss-security/2026/01/07/6"
+type = "file-add"
+file = "CVE-2025-15079.patch"
+source = "CVE-2025-15079.patch"
+
+[[components.curl.overlays]]
+description = "Register CVE-2025-15079 patch as Patch108"
+type = "spec-insert-tag"
+tag = "Patch108"
+value = "CVE-2025-15079.patch"
+
+[[components.curl.overlays]]
+description = "Fix CVE-2025-15224 — http://www.openwall.com/lists/oss-security/2026/01/07/7"
+type = "file-add"
+file = "CVE-2025-15224.patch"
+source = "CVE-2025-15224.patch"
+
+[[components.curl.overlays]]
+description = "Register CVE-2025-15224 patch as Patch109"
+type = "spec-insert-tag"
+tag = "Patch109"
+value = "CVE-2025-15224.patch"
+
+[[components.curl.overlays]]
+description = "Fix CVE-2026-13608 — https://curl.se/docs/CVE-2026-13608.html"
+type = "file-add"
+file = "CVE-2026-13608.patch"
+source = "CVE-2026-13608.patch"
+
+[[components.curl.overlays]]
+description = "Register CVE-2026-13608 patch as Patch110"
+type = "spec-insert-tag"
+tag = "Patch110"
+value = "CVE-2026-13608.patch"
+
+[[components.curl.overlays]]
+description = "Fix CVE-2026-5545 — https://curl.se/docs/CVE-2026-5545.html"
+type = "file-add"
+file = "CVE-2026-5545.patch"
+source = "CVE-2026-5545.patch"
+
+[[components.curl.overlays]]
+description = "Register CVE-2026-5545 patch as Patch111"
+type = "spec-insert-tag"
+tag = "Patch111"
+value = "CVE-2026-5545.patch"
+
+[[components.curl.overlays]]
+description = "Fix CVE-2026-80229 — https://curl.se/docs/CVE-2026-80229.html"
+type = "file-add"
+file = "CVE-2026-80229.patch"
+source = "CVE-2026-80229.patch"
+
+[[components.curl.overlays]]
+description = "Register CVE-2026-80229 patch as Patch112"
+type = "spec-insert-tag"
+tag = "Patch112"
+value = "CVE-2026-80229.patch"

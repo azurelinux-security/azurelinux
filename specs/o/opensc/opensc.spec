@@ -3,7 +3,7 @@
 
 Name:           opensc
 Version:        0.26.1
-Release: 7%{?dist}
+Release: 8%{?dist}
 Summary:        Smart card library and applications
 
 License:        LGPL-2.1-or-later AND BSD-3-Clause
@@ -21,6 +21,7 @@ Patch10:        %{name}-0.26.1-bash-completion.patch
 # https://github.com/OpenSC/OpenSC/pull/3549
 Patch11:        %{name}-0.26.1-function-list.patch
 Patch12:        %{name}-0.26.1-softhsm-2.7.0.patch
+Patch13: CVE-2026-103531.patch
 
 BuildRequires:  make
 BuildRequires:  pcsc-lite-devel
@@ -96,6 +97,7 @@ cp -p src/scconf/README.scconf .
 sed -i -e 's|/usr/local/towitoko/lib/|/usr/lib/ctapi/|' etc/opensc.conf.example.in
 
 
+%patch -P13 -p1
 %build
 autoreconf -fvi
 %ifarch %{ix86}

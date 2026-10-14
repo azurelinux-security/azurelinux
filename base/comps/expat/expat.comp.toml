@@ -3,3 +3,142 @@
 # https://src.fedoraproject.org/rpms/expat/c/e7c4e277fa46ee92ce5bdb1e8c78a573f7304176
 [components.expat]
 spec = { type = "upstream", upstream-commit = "e7c4e277fa46ee92ce5bdb1e8c78a573f7304176" }
+
+[[components.expat.overlays]]
+description = "Apply CVE patches at -p1 (git-format patches need explicit strip)"
+type = "spec-search-replace"
+section = "%prep"
+regex = '%autosetup'
+replacement = '%autosetup -p1'
+
+[[components.expat.overlays]]
+description = "Fix CVE-2026-102633 — https://github.com/libexpat/libexpat/commit/209801d7fbaf07ab74bae8cb32dd2ab9e5846118"
+type = "file-add"
+file = "CVE-2026-102633.patch"
+source = "CVE-2026-102633.patch"
+
+[[components.expat.overlays]]
+description = "Register CVE-2026-102633 patch as Patch0"
+type = "spec-insert-tag"
+tag = "Patch0"
+value = "CVE-2026-102633.patch"
+
+[[components.expat.overlays]]
+description = "Fix CVE-2026-50219 — https://github.com/libexpat/libexpat/pull/1246"
+type = "file-add"
+file = "CVE-2026-50219.patch"
+source = "CVE-2026-50219.patch"
+
+[[components.expat.overlays]]
+description = "Register CVE-2026-50219 patch as Patch1"
+type = "spec-insert-tag"
+tag = "Patch1"
+value = "CVE-2026-50219.patch"
+
+[[components.expat.overlays]]
+description = "Fix CVE-2026-56131 — https://github.com/libexpat/libexpat/pull/1267"
+type = "file-add"
+file = "CVE-2026-56131.patch"
+source = "CVE-2026-56131.patch"
+
+[[components.expat.overlays]]
+description = "Register CVE-2026-56131 patch as Patch2"
+type = "spec-insert-tag"
+tag = "Patch2"
+value = "CVE-2026-56131.patch"
+
+[[components.expat.overlays]]
+description = "Fix CVE-2026-56404 — https://github.com/libexpat/libexpat/pull/1249"
+type = "file-add"
+file = "CVE-2026-56404.patch"
+source = "CVE-2026-56404.patch"
+
+[[components.expat.overlays]]
+description = "Register CVE-2026-56404 patch as Patch3"
+type = "spec-insert-tag"
+tag = "Patch3"
+value = "CVE-2026-56404.patch"
+
+[[components.expat.overlays]]
+description = "Fix CVE-2026-56405 — https://github.com/libexpat/libexpat/pull/1251"
+type = "file-add"
+file = "CVE-2026-56405.patch"
+source = "CVE-2026-56405.patch"
+
+[[components.expat.overlays]]
+description = "Register CVE-2026-56405 patch as Patch4"
+type = "spec-insert-tag"
+tag = "Patch4"
+value = "CVE-2026-56405.patch"
+
+[[components.expat.overlays]]
+description = "Fix CVE-2026-56407 — https://github.com/libexpat/libexpat/pull/1262"
+type = "file-add"
+file = "CVE-2026-56407.patch"
+source = "CVE-2026-56407.patch"
+
+[[components.expat.overlays]]
+description = "Register CVE-2026-56407 patch as Patch5"
+type = "spec-insert-tag"
+tag = "Patch5"
+value = "CVE-2026-56407.patch"
+
+[[components.expat.overlays]]
+description = "Fix CVE-2026-56408 — https://github.com/libexpat/libexpat/commit/16e2efd867ea8567ffa012210b52ef5918e20817"
+type = "file-add"
+file = "CVE-2026-56408.patch"
+source = "CVE-2026-56408.patch"
+
+[[components.expat.overlays]]
+description = "Register CVE-2026-56408 patch as Patch6"
+type = "spec-insert-tag"
+tag = "Patch6"
+value = "CVE-2026-56408.patch"
+
+[[components.expat.overlays]]
+description = "Fix CVE-2026-56409 — https://github.com/libexpat/libexpat/pull/1259"
+type = "file-add"
+file = "CVE-2026-56409.patch"
+source = "CVE-2026-56409.patch"
+
+[[components.expat.overlays]]
+description = "Register CVE-2026-56409 patch as Patch7"
+type = "spec-insert-tag"
+tag = "Patch7"
+value = "CVE-2026-56409.patch"
+
+[[components.expat.overlays]]
+description = "Fix CVE-2026-56410 — https://github.com/libexpat/libexpat/pull/1252"
+type = "file-add"
+file = "CVE-2026-56410.patch"
+source = "CVE-2026-56410.patch"
+
+[[components.expat.overlays]]
+description = "Register CVE-2026-56410 patch as Patch8"
+type = "spec-insert-tag"
+tag = "Patch8"
+value = "CVE-2026-56410.patch"
+
+[[components.expat.overlays]]
+description = "Fix CVE-2026-56411 — https://github.com/libexpat/libexpat/pull/1263"
+type = "file-add"
+file = "CVE-2026-56411.patch"
+source = "CVE-2026-56411.patch"
+
+[[components.expat.overlays]]
+description = "Register CVE-2026-56411 patch as Patch9"
+type = "spec-insert-tag"
+tag = "Patch9"
+value = "CVE-2026-56411.patch"
+
+[[components.expat.overlays]]
+description = "Fix CVE-2026-56412 — https://github.com/libexpat/libexpat/pull/1278"
+type = "file-add"
+file = "CVE-2026-56412.patch"
+source = "CVE-2026-56412.patch"
+
+[[components.expat.overlays]]
+description = "Register CVE-2026-56412 patch as Patch10"
+type = "spec-insert-tag"
+tag = "Patch10"
+value = "CVE-2026-56412.patch"

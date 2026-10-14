@@ -3,3 +3,43 @@
 # (default ON when fedora is set); flip it off via build.without.
 [components.vim]
 build.without = ["gpm"]
+
+[[components.vim.overlays]]
+description = "Fix CVE-2026-32249 — https://github.com/vim/vim/commit/36d6e87542cf823d833e451e09a90ee429899cec"
+type = "file-add"
+file = "CVE-2026-32249.patch"
+source = "CVE-2026-32249.patch"
+
+[[components.vim.overlays]]
+description = "Register CVE-2026-32249 patch as Patch10001"
+type = "spec-insert-tag"
+tag = "Patch10001"
+value = "CVE-2026-32249.patch"
+
+[[components.vim.overlays]]
+description = "Apply CVE-2026-32249 patch (CVE-2026-32249.patch)"
+type = "spec-append-lines"
+section = "%prep"
+lines = [
+    "%patch -P10001 -p1",
+]
+
+[[components.vim.overlays]]
+description = "Fix CVE-2026-41411 — https://github.com/vim/vim/commit/c78194e41d5a0b05b0ddf383b6679b1503f977fb"
+type = "file-add"
+file = "CVE-2026-41411.patch"
+source = "CVE-2026-41411.patch"
+
+[[components.vim.overlays]]
+description = "Register CVE-2026-41411 patch as Patch10002"
+type = "spec-insert-tag"
+tag = "Patch10002"
+value = "CVE-2026-41411.patch"
+
+[[components.vim.overlays]]
+description = "Apply CVE-2026-41411 patch (CVE-2026-41411.patch)"
+type = "spec-append-lines"
+section = "%prep"
+lines = [
+    "%patch -P10002 -p1",
+]

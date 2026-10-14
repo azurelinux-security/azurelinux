@@ -3,3 +3,22 @@
 # https://src.fedoraproject.org/rpms/expat/c/e7c4e277fa46ee92ce5bdb1e8c78a573f7304176
 [components.expat]
 spec = { type = "upstream", upstream-commit = "e7c4e277fa46ee92ce5bdb1e8c78a573f7304176" }
+
+[[components.expat.overlays]]
+description = "Apply CVE patches at -p1 (git-format patches need explicit strip)"
+type = "spec-search-replace"
+section = "%prep"
+regex = '%autosetup'
+replacement = '%autosetup -p1'
+
+[[components.expat.overlays]]
+description = "Fix CVE-2026-56132 — https://github.com/libexpat/libexpat/pull/1272"
+type = "file-add"
+file = "CVE-2026-56132.patch"
+source = "CVE-2026-56132.patch"
+
+[[components.expat.overlays]]
+description = "Register CVE-2026-56132 patch as Patch0"
+type = "spec-insert-tag"
+tag = "Patch0"
+value = "CVE-2026-56132.patch"

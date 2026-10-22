@@ -3,7 +3,7 @@
 
 Name:           opensc
 Version:        0.26.1
-Release: 7%{?dist}
+Release: 8%{?dist}
 Summary:        Smart card library and applications
 
 License:        LGPL-2.1-or-later AND BSD-3-Clause
@@ -51,6 +51,7 @@ Obsoletes:      coolkey <= 1.1.0-36
 # The simclist is bundled in upstream
 Provides:       bundled(simclist) = 1.5
 
+Patch13: CVE-2026-103531.patch
 %description
 OpenSC provides a set of libraries and utilities to work with smart cards. Its
 main focus is on cards that support cryptographic operations, and facilitate
@@ -76,6 +77,7 @@ OpenSC libraries.
 %patch 10 -p1 -b .bash-completion
 %patch 11 -p1 -b .function-list
 %patch 12 -p1 -b .softhsm-2.7.0
+%patch -P13 -p1
 
 XFAIL_TESTS="test-pkcs11-tool-test-threads.sh test-pkcs11-tool-test.sh"
 

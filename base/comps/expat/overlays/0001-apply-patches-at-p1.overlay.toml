@@ -1,0 +1,14 @@
+# Bare %autosetup/%autopatch passes no strip level to `patch`, which then
+# keeps only basenames; the CVE patches below touch files in
+# subdirectories, so apply patches at -p1.
+
+[metadata]
+category = "azl-compatibility"
+upstream-status = "upstreamable"
+
+[[overlays]]
+description = "Apply patches at -p1 so the CVE patches reach files in subdirectories"
+type = "spec-search-replace"
+section = "%prep"
+regex = "(?m)^%autosetup$"
+replacement = "%autosetup -p1"
